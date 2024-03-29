@@ -8,24 +8,39 @@ const router = express.Router();
 router.get('/users', isAdmin, async (req, res) => {
     try {
         const users = await User.find();
-        res.json(users);
+        res.render('users-list', { users }); // Render the view with the users data
     } catch (err) {
+        console.error(err);
         res.status(500).send('Server error');
     }
 });
 
 // Get specific user details
-router.get('/users/:userId', isAdmin, async (req, res) => {
+router.get('/users/edit/:userId', isAdmin, async (req, res) => {
     try {
         const user = await User.findById(req.params.userId);
         if (!user) {
             return res.status(404).send('User not found');
         }
-        res.json(user);
+        res.render('edit-user', { user }); // Assuming 'edit-user.ejs' is your new EJS file for editing users
     } catch (err) {
+        console.error(err);
         res.status(500).send('Server error');
     }
 });
+// Update user details
+// Update user details including password
+router.post('/users/update/:userId', isAdmin, async (req, res) => {
+    try {
+        const { username, password, role } = req.body;
+        await User.findByIdAndUpdate(req.params.userId, { username, password, role });
+        res.redirect('/api/users'); // Redirect back to the users list
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+});
+
 
 router.post('/users', isAdmin, async (req, res) => {
     try {

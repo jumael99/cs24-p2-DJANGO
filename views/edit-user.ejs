@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit User</title>
+</head>
+<body>
+<form action="/api/users/update/<%= user._id %>" method="POST">
+    Username: <input type="text" name="username" value="<%= user.username %>" required>
+    Password: <input type="password" name="password" placeholder="New Password" required>
+    Role:
+    <select name="role">
+        <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
+        <option value="stsManager" <%= user.role === 'stsManager' ? 'selected' : '' %>>STS Manager</option>
+        <option value="landfillManager" <%= user.role === 'landfillManager' ? 'selected' : '' %>>Landfill Manager</option>
+        <option value="unassigned" <%= user.role === 'unassigned' ? 'selected' : '' %>>Unassigned</option>
+    </select>
+    <button type="submit">Update User</button>
+</form>
+<a href="/api/users">Back to Users List</a>
+</body>
+</html>

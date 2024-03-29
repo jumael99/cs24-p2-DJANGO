@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Users List</title>
+</head>
+<body>
+<% users.forEach(user => { %>
+    <div>
+        <%= user.username %> - <%= user.role %>
+        <a href="/api/users/edit/<%= user._id %>">Edit</a>
+    </div>
+<% }) %>
+</body>
+</html>
