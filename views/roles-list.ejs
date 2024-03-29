@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Roles List</title>
+</head>
+<body>
+<h1>Roles</h1>
+<ul>
+    <% roles.forEach(function(role) { %>
+        <li><%= role %></li>
+    <% }); %>
+</ul>
+<a href="/admin-panel"><button>Back to Admin Panel</button></a>
+</body>
+</html>

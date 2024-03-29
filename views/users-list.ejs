@@ -8,6 +8,10 @@
     <div>
         <%= user.username %> - <%= user.role %>
         <a href="/api/users/edit/<%= user._id %>">Edit</a>
+        <!-- Delete Form -->
+        <form action="/api/users/delete/<%= user._id %>" method="POST" style="display: inline;">
+            <button type="submit">Delete</button>
+        </form>
     </div>
 <% }) %>
 </body>

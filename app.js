@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const userRoutes = require('./routes/user.routes'); // Adjust the path based on your structure
 const mongoose = require('mongoose');
 const session = require('express-session');
-
+const { isAdmin } = require('./utils/roleMiddleware');
+const User = require('./models/user.model')
 // MongoDB connection string from your Atlas dashboard
 const mongoDBUri = 'mongodb+srv://ehtesamul99:55555@cluster0.ogknxls.mongodb.net/xy?retryWrites=true&w=majority&appName=Cluster0'
 
@@ -43,18 +44,41 @@ app.get('/login', (req, res) => {
 
 
 // Auth routes
-app.post('/auth/login', (req, res) => {
+app.post('/auth/login', async (req, res) => {
     const { username, password } = req.body;
 
-    // Example: Hardcoded admin login
-    if (username === 'admin' && password === 'admin') {
-        req.session.user = { username, role: 'admin' };
-        res.redirect('/admin-panel'); // Redirect to an admin panel page
-    } else {
-        res.status(401).send('Login failed');
+    // First, check if the username exists in the database
+    const user = await User.findOne({ username });
+
+    if (!user) {
+        // If the username isn't found, send a specific error message
+        return res.status(401).send('Username does not exist');
+    }
+
+    // If the username exists but the password doesn't match, send a different error
+    if (user.password !== password) {
+        return res.status(401).send('Incorrect password');
+    }
+
+    // If both username and password match, proceed with setting the session and redirecting
+    req.session.user = { id: user._id, username: user.username, role: user.role };
+
+    // Redirect based on role
+    switch(user.role) {
+        case 'admin':
+            return res.redirect('/admin-panel');
+        case 'stsManager':
+            return res.redirect('/sts-manager-panel');
+        case 'unassigned':
+            return res.status(401).send("User role Unassigned!! Can't login");
+        case 'landfillManager':
+            return res.redirect('/landfill-manager-panel');
+        default:
+            return res.status(403).send('Access Denied');
     }
 });
 
+//admin-route
 app.get('/admin-panel', (req, res) => {
     if (req.session.user && req.session.user.role === 'admin') {
         res.render('admin-panel');
@@ -62,6 +86,37 @@ app.get('/admin-panel', (req, res) => {
         res.status(403).send('Access Denied');
     }
 });
+
+//sts-manager route
+app.get('/sts-manager-panel', (req, res) => {
+    if (req.session.user && req.session.user.role === 'stsManager') {
+        res.render('sts-manager-panel');
+    } else {
+        res.status(403).send('Access Denied');
+    }
+});
+
+// Landfill Manager Panel Route
+app.get('/landfill-manager-panel', (req, res) => {
+    if (req.session.user && req.session.user.role === 'landfillManager') {
+        res.render('landfill-manager-panel');
+    } else {
+        res.status(403).send('Access Denied');
+    }
+});
+
+// Logout route
+app.get('/auth/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.log(err); // Log any error if session destruction fails
+            res.send('Error logging out'); // Send or handle the error in a way that makes sense for your application
+        } else {
+            res.redirect('/login'); // Redirect to login page after successful logout
+        }
+    });
+});
+
 
 
 

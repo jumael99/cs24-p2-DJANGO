@@ -4,6 +4,9 @@ const { isAdmin } = require('../utils/roleMiddleware');
 
 const router = express.Router();
 
+const roles = ['admin', 'stsManager', 'landfillManager', 'unassigned'];
+
+
 // List all users (Admin access)
 router.get('/users', isAdmin, async (req, res) => {
     try {
@@ -35,6 +38,38 @@ router.post('/users/update/:userId', isAdmin, async (req, res) => {
         const { username, password, role } = req.body;
         await User.findByIdAndUpdate(req.params.userId, { username, password, role });
         res.redirect('/api/users'); // Redirect back to the users list
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+});
+
+
+
+// GET method for listing all available roles
+router.get('/users/roles', isAdmin, (req, res) => {
+    res.render('roles-list', { roles });
+});
+
+// Simulate DELETE operation for deleting a user
+// Simulate DELETE operation for deleting a user
+router.post('/users/delete/:userId', isAdmin, async (req, res) => {
+    try {
+        await User.findByIdAndDelete(req.params.userId); // Use findByIdAndDelete
+        res.redirect('/api/users');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+});
+
+
+
+// DELETE method for deleting a user (System Admin access)
+router.delete('/users/:userId', isAdmin, async (req, res) => {
+    try {
+        await User.findByIdAndDelete(req.params.userId);
+        res.send('User deleted successfully');
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
