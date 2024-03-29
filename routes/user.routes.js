@@ -27,7 +27,6 @@ router.get('/users/:userId', isAdmin, async (req, res) => {
     }
 });
 
-// Create a new user (Admin access)
 router.post('/users', isAdmin, async (req, res) => {
     try {
         const { username, password, role } = req.body;
@@ -38,8 +37,8 @@ router.post('/users', isAdmin, async (req, res) => {
         // Save the user to the database
         user = await user.save();
 
-        // Send the created user as the response
-        res.status(201).send(user);
+        // Redirect to the admin panel page after successful user creation
+        res.redirect('/admin-panel');
     } catch (err) {
         console.error(err); // Logging the error to the console for debugging
         res.status(500).send('Server error'); // Sending a generic server error message
