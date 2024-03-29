@@ -166,21 +166,15 @@ app.post('/sts-data/create', async (req, res) => {
 });
 
 //This endpoint will serve the profile view with the user's current information.
-app.get('/profile', async (req, res) => {
-    if (!req.session.user) {
-        return res.status(401).send('You must be logged in to view this page.');
-    }
-
-    try {
-        const user = await User.findById(req.session.user.id);
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
-        // Assuming a roleView template exists for displaying roles and permissions
-        res.render('profile-view', { user });
-    } catch (error) {
-        console.error('Error fetching user profile:', error);
-        res.status(500).send('Error loading profile page');
+app.get('/profile', (req, res) => {
+    if (req.session.user) {
+        res.render('profile-view', {
+            user: req.session.user,
+            role: req.session.user.role // Assuming the role is stored in the session
+        });
+    } else {
+        // Redirect to login page or display an error message
+        res.redirect('/login');
     }
 });
 
