@@ -1,0 +1,13 @@
+<h2>Fleet Optimization</h2>
+<div>Total Daily Waste: <%= dailyWasteAmount %> kg</div>
+<h3>Available Trucks:</h3>
+<ul class="list-group">
+    <% trucks.forEach(function(truck) { %>
+        <li class="list-group-item">
+            Truck ID: <%= truck.id %><br>
+            Capacity: <%= truck.capacity %> kg<br>
+            Fuel Consumption: <%= truck.fuelConsumption %>
+        </li>
+    <% }) %>
+</ul>
+<!-- Insert your logic or display for suggested truck usage based on the mockup data -->
