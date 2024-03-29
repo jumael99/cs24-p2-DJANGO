@@ -8,6 +8,8 @@ const { isAdmin } = require('./utils/roleMiddleware');
 const User = require('./models/user.model')
 // MongoDB connection string from your Atlas dashboard
 const mongoDBUri = 'mongodb+srv://ehtesamul99:55555@cluster0.ogknxls.mongodb.net/xy?retryWrites=true&w=majority&appName=Cluster0'
+const STSData = require('./models/stsData.model'); // Adjust the path as necessary based on your project structure
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -116,6 +118,96 @@ app.get('/auth/logout', (req, res) => {
         }
     });
 });
+
+//sts-manager info edit
+app.get('/sts-manager/edit', (req, res) => {
+    // Ensure the user is authenticated and has the stsManager role
+    if (req.session.user && req.session.user.role === 'stsManager') {
+        res.render('edit-sts-manager');
+    } else {
+        res.status(403).send('Access Denied');
+    }
+});
+
+//sts manager data entry
+app.get('/sts-manager/data-entry', (req, res) => {
+    // Ensure the user is authenticated and has the stsManager role
+    if (req.session.user && req.session.user.role === 'stsManager') {
+        res.render('data-entries');
+    } else {
+        res.status(403).send('Access Denied');
+    }
+});
+
+//sts-data post from ejs form
+app.post('/sts-data/create', async (req, res) => {
+    // Extract form data from req.body
+    const { stsNumber, vehicleNumber, arrivalTime, departureTime, wasteWeight } = req.body;
+
+    // Assume managerId is obtained from the session
+    const managerId = req.session.user.id;
+
+    try {
+        // Use the STSData model to save the new entry
+        await STSData.create({
+            stsNumber,
+            vehicleNumber,
+            arrivalTime,
+            departureTime,
+            wasteWeight,
+            managerId
+        });
+
+        res.redirect('/sts-manager-panel'); // Redirect back to the STS manager panel or a success page
+    } catch (error) {
+        console.error('Error saving STS data:', error);
+        res.status(500).send('Error saving data');
+    }
+});
+
+//This endpoint will serve the profile view with the user's current information.
+app.get('/profile', async (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).send('You must be logged in to view this page.');
+    }
+
+    try {
+        const user = await User.findById(req.session.user.id);
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        // Assuming a roleView template exists for displaying roles and permissions
+        res.render('profile-view', { user });
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+        res.status(500).send('Error loading profile page');
+    }
+});
+
+//PUT /profile for Updating the Logged-in User's Profile
+app.post('/profile', async (req, res) => {
+    const { username, password } = req.body; // You can include other fields that are allowed to be updated.
+
+    if (!req.session.user) {
+        return res.status(403).send('Not logged in');
+    }
+
+    try {
+        const updateData = { username };
+        if (password) updateData.password = password; // Update password if provided
+        // Update the user profile
+        await User.findByIdAndUpdate(req.session.user.id, updateData);
+
+        // Optionally, update session information
+        req.session.user.username = username;
+
+        res.redirect('/profile'); // Redirect to the profile page after update
+    } catch (error) {
+        console.error('Error updating user profile:', error);
+        res.status(500).send('Error updating profile');
+    }
+});
+
 
 
 
