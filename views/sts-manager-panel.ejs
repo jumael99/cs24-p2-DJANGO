@@ -1,44 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>STS Manager Panel</title>
     <!-- Include Bootstrap CSS from a CDN -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
     <style>
-        /* Additional custom styles can go here */
-        .username {
-            font-size: 3rem; /* Big font size for the username */
-            font-weight: bold; /* Make it bold */
-            margin-bottom: 1rem; /* Add some spacing below the username */
-        }
+      /* Additional custom styles can go here */
+      .username {
+        font-size: 3rem;
+        /* Big font size for the username */
+        font-weight: bold;
+        /* Make it bold */
+        margin-bottom: 1rem;
+        /* Add some spacing below the username */
+      }
+
+      .all-width-same > * {
+        padding-top: 1rem;
+      }
     </style>
-</head>
-<body class="bg-light">
-<div class="container py-5">
-    <!-- Centered container for your content -->
+  </head>
 
-    <!-- Display username in a big and stylish font -->
-    <h1 class="username text-center text-primary">STS Manager</h1>
+  <body class="bg-light">
+    <div class="container py-5 shadow w-50 my-5 p-4 rounded rounded-5">
+      <!-- Centered container for your content -->
 
-    <div class="d-grid gap-2 col-6 mx-auto">
+      <!-- Display username in a big and stylish font -->
+      <h1 class="username text-center border-bottom pb-2">STS Manager</h1>
+
+      <div class="d-flex justify-content-between all-width-same">
         <!-- Use Bootstrap classes for styling and spacing -->
-        <form action="/profile" method="get">
-            <button type="submit" class="btn btn-primary btn-lg">Edit STS Manager Info</button>
-        </form>
+        <div>
+          <form action="/profile" method="get">
+            <button type="submit" class="btn btn-primary btn-lg">
+              Edit STS Manager Info
+            </button>
+          </form>
+        </div>
 
-        <form action="/sts-manager/data-entry" method="get">
-            <button type="submit" class="btn btn-secondary btn-lg">Data Entries</button>
-        </form>
+        <div>
+          <form action="/sts-manager/data-entry" method="get">
+            <button type="submit" class="btn btn-secondary btn-lg">
+              Data Entries
+            </button>
+          </form>
+        </div>
 
-        <a href="/auth/logout" class="btn btn-warning btn-lg">Logout</a>
+        <div>
+          <a href="/auth/logout" class="btn btn-warning btn-lg">Logout</a>
+        </div>
+      </div>
     </div>
-</div>
 
-<!-- Include Bootstrap JS and its dependencies -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.5/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+    <!-- Include Bootstrap JS and its dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.5/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
 </html>
