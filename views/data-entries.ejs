@@ -1,72 +1,15 @@
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-<div class="container mt-3">
-    <div class="row justify-content-md-center">
-        <div class="col-md-auto">
-            <form action="/sts-data/create" method="post" class="needs-validation" novalidate style="font-size: larger;">
-                <div class="form-group">
-                    <input type="number" class="form-control" name="stsNumber" placeholder="STS Number" required>
-                    <div class="invalid-feedback">
-                        Please enter the STS number.
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="vehicleNumber" placeholder="Vehicle Number" required>
-                    <div class="invalid-feedback">
-                        Please enter the vehicle number.
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input type="datetime-local" class="form-control" name="arrivalTime" placeholder="Arrival Time" required>
-                    <div class="invalid-feedback">
-                        Please specify the arrival time.
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input type="datetime-local" class="form-control" name="departureTime" placeholder="Departure Time" required>
-                    <div class="invalid-feedback">
-                        Please specify the departure time.
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input type="number" class="form-control" name="wasteWeight" placeholder="Waste Weight" required>
-                    <div class="invalid-feedback">
-                        Please enter the waste weight.
-                    </div>
-                </div>
-                <div class="form-group">
-                    <!-- Use Bootstrap's button classes to style the submit button -->
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-                <a href="/sts-manager-panel" class="btn btn-info">Go back</a>
-            </form>
-        </div>
+<form action="/sts-data/create" method="post">
+    <div class="form-group">
+        <label for="stsNumber">STS Number:</label>
+        <input type="number" class="form-control" id="stsNumber" name="stsNumber" required>
     </div>
-</div>
-
-<!-- Include Bootstrap JS and its dependencies for form validation -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.5/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-<script>
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (function() {
-        'use strict';
-        window.addEventListener('load', function() {
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.getElementsByClassName('needs-validation');
-            // Loop over them and prevent submission
-            var validation = Array.prototype.filter.call(forms, function(form) {
-                form.addEventListener('submit', function(event) {
-                    if (form.checkValidity() === false) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
-            });
-        }, false);
-    })();
-</script>
+    <div class="form-group">
+        <label for="wasteWeight">Wastage Amount (tons):</label>
+        <input type="number" class="form-control" id="wasteWeight" name="wasteWeight" required>
+    </div>
+    <div class="form-group">
+        <label for="startTime">Starting Time:</label>
+        <input type="time" class="form-control" id="startTime" name="startTime" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

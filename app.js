@@ -6,9 +6,13 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const { isAdmin } = require('./utils/roleMiddleware');
 const User = require('./models/user.model')
+const { calculateTruckRounds } = require('./truckCalculations');
+
+
 // MongoDB connection string from your Atlas dashboard
 const mongoDBUri = 'mongodb+srv://ehtesamul99:55555@cluster0.ogknxls.mongodb.net/xy?retryWrites=true&w=majority&appName=Cluster0'
 const STSData = require('./models/stsData.model'); // Adjust the path as necessary based on your project structure
+const PDFDocument = require('pdfkit');
 
 
 const app = express();
@@ -139,31 +143,10 @@ app.get('/sts-manager/data-entry', (req, res) => {
     }
 });
 
-//sts-data post from ejs form
-app.post('/sts-data/create', async (req, res) => {
-    // Extract form data from req.body
-    const { stsNumber, vehicleNumber, arrivalTime, departureTime, wasteWeight } = req.body;
 
-    // Assume managerId is obtained from the session
-    const managerId = req.session.user.id;
 
-    try {
-        // Use the STSData model to save the new entry
-        await STSData.create({
-            stsNumber,
-            vehicleNumber,
-            arrivalTime,
-            departureTime,
-            wasteWeight,
-            managerId
-        });
 
-        res.redirect('/sts-manager-panel'); // Redirect back to the STS manager panel or a success page
-    } catch (error) {
-        console.error('Error saving STS data:', error);
-        res.status(500).send('Error saving data');
-    }
-});
+
 
 //This endpoint will serve the profile view with the user's current information.
 app.get('/profile', (req, res) => {
@@ -202,11 +185,105 @@ app.post('/profile', async (req, res) => {
     }
 });
 
+//landfill data-entry
+app.get('/landfill-data-entry', (req, res) => {
+    res.render('landfill-data-entry');
+});
 
 
 
 
-// Starting the server
+//sts-data post from ejs form
+// Example route handler for form submission
+app.post('/sts-data/create', async (req, res) => {
+    const { stsNumber, wasteWeight, startTime } = req.body;
+
+    // Create a new Date object for today
+    let startDateTime = new Date();
+
+    // Extract hours and minutes from the startTime string
+    let [hours, minutes] = startTime.split(':').map(Number);
+
+    // Set hours and minutes to the startDateTime object
+    startDateTime.setHours(hours, minutes, 0, 0);
+
+    try {
+        await STSData.create({
+            stsNumber: parseInt(stsNumber, 10),
+            wasteWeight: parseFloat(wasteWeight),
+            startTime: startDateTime,
+        });
+
+        // Successful submission response
+        res.send(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Submission Success</title>
+                <meta http-equiv="refresh" content="3;url=/sts-manager/data-entry" />
+            </head>
+            <body>
+                <h1>Success!</h1>
+                <p>Your data has been successfully submitted. You will be redirected shortly.</p>
+            </body>
+            </html>
+        `);
+    } catch (error) {
+        console.error('Error saving STS data:', error);
+        res.status(500).send('Error submitting data');
+    }
+});
+
+
+app.post('/print-report', async (req, res) => {
+    const stsNumber = req.body.stsNumber;
+
+    try {
+        const record = await STSData.findOne({ stsNumber: stsNumber });
+
+        if (!record) {
+            return res.status(404).send('STS Data not found');
+        }
+
+        // Use the updated calculation function
+        const { rounds, cost, trucks } = calculateTruckRounds(record.wasteWeight);
+
+        // Initialize PDF document
+        const doc = new PDFDocument();
+        let buffers = [];
+        doc.on('data', buffers.push.bind(buffers));
+        doc.on('end', () => {
+            let pdfData = Buffer.concat(buffers);
+            res.writeHead(200, {
+                'Content-Length': Buffer.byteLength(pdfData),
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': 'attachment;filename="truck_rounds_report.pdf"',
+            }).end(pdfData);
+        });
+
+        // Add content to PDF
+        doc.fontSize(12)
+            .text(`STS Number: ${stsNumber}`, { underline: true })
+            .moveDown()
+            .text(`Total Waste Weight: ${record.wasteWeight} tons`)
+            .moveDown()
+            .text(`Minimum Rounds Needed: ${rounds}`)
+            .moveDown()
+            .text(`Total Cost: $${cost}`)
+            .moveDown();
+
+        trucks.forEach(truck => {
+            if (truck.trips > 0) {
+                doc.text(`${truck.type} goes ${truck.trips} times`);
+            }
+        });
+
+        doc.end();
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('An error occurred');
+    }
+});
 
 
 mongoose.connect(mongoDBUri,)
