@@ -1,15 +1,32 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Roles List</title>
-</head>
-<body>
-<h1>Roles</h1>
-<ul>
-    <% roles.forEach(function(role) { %>
-        <li><%= role %></li>
-    <% }); %>
-</ul>
-<a href="/admin-panel"><button>Back to Admin Panel</button></a>
-</body>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h1 class="mt-5 mb-4">Roles</h1>
+          <ul class="list-group mb-4">
+            <% roles.forEach(function(role) { %>
+            <li class="list-group-item"><%= role %></li>
+            <% }); %>
+          </ul>
+          <a href="/admin-panel" class="btn btn-primary">Back to Admin Panel</a>     
+           
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
