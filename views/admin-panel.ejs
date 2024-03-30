@@ -1,39 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Panel</title>
     <!-- Bootstrap CSS for styling -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-<div class="container">
-    <h2>Admin Panel - Create User</h2>
-    <form action="/api/users" method="POST">
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container card w-50 p-4 my-4">
+      <h2>Admin Panel - Create User</h2>
+      <form action="/api/users" method="POST">
         <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" class="form-control" id="username" name="username" required>
+          <label for="username">Username:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            name="username"
+            required
+          />
         </div>
         <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" class="form-control" id="password" name="password" required>
+          <label for="password">Password:</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            required
+          />
         </div>
         <div class="form-group">
-            <label for="role">Role:</label>
-            <select class="form-control" id="role" name="role" required>
-                <option value="stsManager">STS Manager</option>
-                <option value="landfillManager">Landfill Manager</option>
-                <option value="unassigned">Unassigned</option>
-            </select>
+          <label for="role">Role:</label>
+          <select class="form-control" id="role" name="role" required>
+            <option value="stsManager">STS Manager</option>
+            <option value="landfillManager">Landfill Manager</option>
+            <option value="unassigned">Unassigned</option>
+          </select>
         </div>
         <button type="submit" class="btn btn-primary">Create User</button>
-    </form>
-    <a href="/api/users" class="btn btn-secondary mt-3">Get All Users</a>
-    <a href="/api/users/roles" class="btn btn-secondary mt-3">See all roles</a>
-    <a href="/auth/logout" class="btn btn-warning">Logout</a>
-    <a href="/profile" class="btn btn-info">Edit profile</a>
-
-</div>
-</body>
+      </form>
+      <div class="flex align-items-center justify-content-evenly my-4">
+        <a href="/api/users" class="btn btn-secondary">Get All Users</a>
+        <a href="/api/users/roles" class="btn btn-secondary">See all roles</a>
+        <a href="/auth/logout" class="btn btn-warning">Logout</a>
+        <a href="/profile" class="btn btn-info">Edit profile</a>
+      </div>
+    </div>
+  </body>
 </html>

@@ -6,8 +6,11 @@ const trucks = [
 ];
 
 function calculateTruckRounds(wasteAmount) {
+    // Reset trips to 0 for each truck at the beginning of the function
+    trucks.forEach(truck => truck.trips = 0);
+
     wasteAmount *= 1.0;
-    let cost = 0, printCost = 0;
+    let cost = 0;
     let rounds = 0;
     let totalCapacityPerRound = trucks.reduce((sum, truck) => sum + truck.capacity, 0);
 

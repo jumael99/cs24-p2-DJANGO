@@ -47,7 +47,7 @@ router.post('/users/update/:userId', isAdmin, async (req, res) => {
 
 
 // GET method for listing all available roles
-router.get('/users/roles', isAdmin, (req, res) => {
+router.get('/users/roles', (req, res) => {
     res.render('roles-list', { roles });
 });
 

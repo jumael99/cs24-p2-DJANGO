@@ -17,10 +17,17 @@
         color: #007bff; /* Bootstrap primary color */
         margin-bottom: 1rem; /* Add some spacing below the username */
       }
+      .mycarddetails {
+        width: 50%;
+      }
     </style>
   </head>
-  <body class="bg-light">
-    <div class="container py-5 card w-25 my-5 shadow">
+  
+  <body class="bg-light position-relative">
+    <div class="border-5 text-center shadow-lg p-2 mb-4">
+      Current User: <%= user.username %>
+    </div>
+    <div class="container py-5 mycarddetails my-5 shadow">
       <!-- Centered container for your content -->
 
       <!-- Display username in a big and stylish font -->
@@ -32,6 +39,9 @@
       <div class="row justify-content-center p-4">
         <div class="col-md-12">
           <form action="/profile" method="post">
+            <h3 class="text-center border-bottom py-2">
+              User: <%= user.username %>
+            </h3>
             <div class="form-group">
               <label for="username">Username:</label>
               <input
