@@ -1,56 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Profile</title>
     <!-- Include Bootstrap CSS from a CDN -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
     <style>
-        /* Additional custom styles can go here */
-        .username-display {
-            font-size: 3rem; /* Big font size for the username */
-            font-weight: bold; /* Make it bold */
-            color: #007bff; /* Bootstrap primary color */
-            margin-bottom: 1rem; /* Add some spacing below the username */
-        }
+      /* Additional custom styles can go here */
+      .username-display {
+        font-size: 2.5rem; /* Big font size for the username */
+        font-weight: bold; /* Make it bold */
+        color: #007bff; /* Bootstrap primary color */
+        margin-bottom: 1rem; /* Add some spacing below the username */
+      }
     </style>
-</head>
-<body class="bg-light">
-<div class="container py-5">
-    <!-- Centered container for your content -->
+  </head>
+  <body class="bg-light">
+    <div class="container py-5 card w-25 my-5 shadow">
+      <!-- Centered container for your content -->
 
-    <!-- Display username in a big and stylish font -->
-    <div class="text-center mb-4">
+      <!-- Display username in a big and stylish font -->
+      <div class="text-center mb-4 card-title">
         <div class="username-display">User Profile</div>
-    </div>
+      </div>
 
-    <!-- User Profile Form -->
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <form action="/profile" method="post">
-                <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" class="form-control" id="username" name="username" value="<%= user.username %>" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">New Password (leave blank if unchanged):</label>
-                    <input type="password" class="form-control" id="password" name="password">
-                </div>
-                <!-- Include other fields as needed -->
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary btn-block">Update Profile</button>
-                    <!-- Link to STS Manager Panel -->
-                    <a href="<%= role === 'admin' ? 'http://localhost:3000/admin-panel' : 'http://localhost:3000/sts-manager-panel' %>" class="btn btn-primary btn-block">Go back</a>
-                </div>
-            </form>
+      <!-- User Profile Form -->
+      <div class="row justify-content-center p-4">
+        <div class="col-md-12">
+          <form action="/profile" method="post">
+            <div class="form-group">
+              <label for="username">Username:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                name="username"
+                value="<%= user.username %>"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="password"
+                >New Password (leave blank if unchanged):</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+              />
+            </div>
+            <!-- Include other fields as needed -->
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary btn-block">
+                Update Profile
+              </button>
+              <!-- Link to STS Manager Panel -->
+              <a
+                href="<%= role === 'admin' ? 'http://localhost:3000/admin-panel' : 'http://localhost:3000/sts-manager-panel' %>"
+                class="btn btn-primary btn-block"
+                >Go back</a
+              >
+            </div>
+          </form>
         </div>
+      </div>
     </div>
-</div>
 
-<!-- Include Bootstrap JS and its dependencies -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.5/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+    <!-- Include Bootstrap JS and its dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.5/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
 </html>
