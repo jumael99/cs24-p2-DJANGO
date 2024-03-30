@@ -1,51 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Entries</title>
-    <!-- Bootstrap CSS for styling -->
-    <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div class="w-50 mx-auto shadow p-5 my-5">
-      <h2>Data Entries</h2>
-      <form action="/sts-data/create" method="post">
-        <div class="form-group">
-          <label for="stsNumber">STS Number:</label>
-          <input
-            type="number"
-            class="form-control"
-            id="stsNumber"
-            name="stsNumber"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="wasteWeight">Wastage Amount (tons):</label>
-          <input
-            type="number"
-            class="form-control"
-            id="wasteWeight"
-            name="wasteWeight"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="startTime">Starting Time:</label>
-          <input
-            type="time"
-            class="form-control"
-            id="startTime"
-            name="startTime"
-            required
-          />
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entries</title>
+  <!-- Bootstrap CSS for styling -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    /* Additional styles for better button alignment and styling */
+    .back-button {
+      display: inline-block;
+      margin-top: 20px; /* Adjust as needed for alignment */
+      text-decoration: none;
+      color: #fff;
+      background-color: #007bff; /* Bootstrap primary button color */
+      padding: 10px 15px;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    .back-button:hover {
+      color: #fff;
+      background-color: #0056b3; /* Slightly darker on hover */
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+<div class="w-50 mx-auto shadow p-5 my-5">
+  <h2>Data Entries</h2>
+  <form action="/sts-data/create" method="post">
+    <div class="form-group">
+      <label for="stsNumber">STS Number:</label>
+      <input type="number" class="form-control" id="stsNumber" name="stsNumber" required />
     </div>
-  </body>
+    <div class="form-group">
+      <label for="wasteWeight">Wastage Amount (tons):</label>
+      <input type="number" class="form-control" id="wasteWeight" name="wasteWeight" required />
+    </div>
+    <div class="form-group">
+      <label for="startTime">Starting Time:</label>
+      <input type="time" class="form-control" id="startTime" name="startTime" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+  <!-- Updated Go back link -->
+  <a href="/sts-manager-panel" class="back-button">Go back</a>
+</div>
+</body>
 </html>
