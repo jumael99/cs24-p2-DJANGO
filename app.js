@@ -40,7 +40,7 @@ const adminCredentials = {
 
 
 // Use routes
-app.use('/api', userRoutes);
+app.use('/', userRoutes);
 
 
 app.get('/login', (req, res) => {
@@ -186,7 +186,7 @@ app.post('/profile', async (req, res) => {
 });
 
 //landfill data-entry
-app.get('/landfill-data-entry', (req, res) => {
+app.get('/landfill-data-entry', (req, res) => { /*here need to add session logic */
     res.render('landfill-data-entry');
 });
 
@@ -195,7 +195,7 @@ app.get('/landfill-data-entry', (req, res) => {
 
 //sts-data post from ejs form
 // Example route handler for form submission
-app.post('/sts-data/create', async (req, res) => {
+app.post('/sts-data/create', async (req, res) => { /*here need to add session logic*/
     const { stsNumber, wasteWeight, startTime } = req.body;
 
     // Create a new Date object for today
@@ -235,7 +235,7 @@ app.post('/sts-data/create', async (req, res) => {
 });
 
 
-app.post('/print-report', async (req, res) => {
+app.post('/print-report', async (req, res) => { /*here need to add session logic*/
     const stsNumber = req.body.stsNumber;
 
     try {
@@ -267,7 +267,7 @@ app.post('/print-report', async (req, res) => {
             .moveDown()
             .text(`Total Waste Weight: ${record.wasteWeight} tons`)
             .moveDown()
-            .text(`Minimum Rounds Needed: ${rounds}`)
+            .text(`Minimum Trips Needed: ${rounds}`)
             .moveDown()
             .text(`Total Cost: $${cost}`)
             .moveDown();
