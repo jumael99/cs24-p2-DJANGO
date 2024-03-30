@@ -193,6 +193,16 @@ app.get('/landfill-data-entry', (req, res) => { /*here need to add session logic
     res.render('landfill-data-entry');
 });
 
+//route optimization view render
+app.get('/sts-manager/route-optimization', (req, res) => {
+    const routes = require('./routeOptimizationData.json');
+    res.render('route-optimization-view', { routes });
+});
+//fleet optimization view render
+app.get('/sts-manager/fleet-optimization', (req, res) => {
+    const { dailyWasteAmount, trucks } = require('./fleetData.json');
+    res.render('fleet-optimization-view', { dailyWasteAmount, trucks });
+});
 
 
 
