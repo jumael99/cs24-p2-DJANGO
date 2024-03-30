@@ -185,22 +185,6 @@ app.get("/landfill-data-entry", (req, res) => {
   res.render("landfill-data-entry");
 });
 
-<<<<<<< HEAD
-//route optimization view render
-app.get('/sts-manager/route-optimization', (req, res) => {
-    const routes = require('./routeOptimizationData.json');
-    res.render('route-optimization-view', { routes });
-});
-//fleet optimization view render
-app.get('/sts-manager/fleet-optimization', (req, res) => {
-    const { dailyWasteAmount, trucks } = require('./fleetData.json');
-    res.render('fleet-optimization-view', { dailyWasteAmount, trucks });
-});
-
-
-
-=======
->>>>>>> origin/main
 //sts-data post from ejs form
 // Example route handler for form submission
 app.post("/sts-data/create", async (req, res) => {
