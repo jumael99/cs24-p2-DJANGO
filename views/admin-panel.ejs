@@ -9,7 +9,7 @@
 <body>
 <div class="container card w-50 p-4 my-4">
     <h2>Admin Panel - Create User</h2>
-    <form action="/api/users" method="POST">
+    <form action="/users" method="POST">
         <div class="form-group">
             <label for="name">Name:</label>
             <input type="text" class="form-control" id="name" name="name" required/>
@@ -50,8 +50,8 @@
         <div class="border-top my-3"></div>
         <h3>Manage Users and Edit Profile</h3>
         <div class="my-4">
-            <a href="/api/users" class="btn btn-secondary">Get All Users</a>
-            <a href="/api/users/roles" class="btn btn-secondary">See all roles</a>
+            <a href="/users" class="btn btn-secondary">Get All Users</a>
+            <a href="/users/roles" class="btn btn-secondary">See all roles</a>
             <a href="/profile" class="btn btn-info">Edit profile</a>
         </div>
         <div class="border-top my-3"></div>

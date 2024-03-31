@@ -9,9 +9,9 @@
 <body>
 <div class="container card w-50 p-4 my-4">
     <!-- Displaying user's name and username -->
-    <h3>User <%= user.name %> is changing his profile. Username is <%= user.username %></h3>
+    <!--<h3>User <%= user.name %> is changing his profile. Username is <%= user.username %></h3>-->
     <h2>Edit Profile</h2>
-    <form action="/api/users/update/<%= user._id %>" method="POST">
+    <form action="/users/update/<%= user._id %>" method="POST">
         <div class="form-group">
             <label for="name">Name:</label>
             <input type="text" class="form-control" id="name" name="name" required value="<%= user.name %>" />
