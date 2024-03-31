@@ -34,7 +34,7 @@ const adminCredentials = {
 };
 
 // Use routes
-app.use("/api", userRoutes);
+app.use("/", userRoutes);
 
 app.get("/", (req, res) => {
     res.render("login");
