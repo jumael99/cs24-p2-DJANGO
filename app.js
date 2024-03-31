@@ -138,35 +138,51 @@ app.get("/sts-manager/data-entry", (req, res) => {
 });
 
 //This endpoint will serve the profile view with the user's current information.
-app.get("/profile", (req, res) => {
-    if (req.session.user) {
-        res.render("profile-view", {
-            user: req.session.user, role: req.session.user.role, // Assuming the role is stored in the session
-        });
+app.get("/profile", async (req, res) => {
+    if (req.session.user && req.session.user.id) {
+        try {
+            // Fetch the complete user data from the database
+            const user = await User.findById(req.session.user.id);
+            if (!user) {
+                return res.status(404).send("User not found");
+            }
+
+            // Render the profile with the complete user data
+            res.render("profile-view", {
+                user: user.toObject(), // Convert the MongoDB document to a plain JavaScript object
+                role: user.role // Assuming the role field is directly available on the user document
+            });
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+            res.status(500).send("Server error");
+        }
     } else {
         // Redirect to login page or display an error message
         res.redirect("/login");
     }
 });
-
 //PUT /profile for Updating the Logged-in User's Profile
 app.post("/profile", async (req, res) => {
-    const { name, email, username, gender, password } = req.body;// You can include other fields that are allowed to be updated.
+    const { name, email, username, gender, password } = req.body;
 
     if (!req.session.user) {
         return res.status(403).send("Not logged in");
     }
 
     try {
-        const updateData = {username};
-        if (password) updateData.password = password; // Update password if provided
+        // Prepare update data excluding empty password
+        const updateData = { name, email, username, gender };
+        if (password && password.trim() !== '') {
+            updateData.password = password; // Update password only if it's provided
+        }
+
         // Update the user profile
         await User.findByIdAndUpdate(req.session.user.id, updateData);
 
         // Optionally, update session information
-        req.session.user.username = username;
+        req.session.user = { ...req.session.user, ...updateData };
 
-        res.redirect("/profile"); // Redirect to the profile page after update
+        res.redirect("/profile"); // Redirect to the profile page after the update
     } catch (error) {
         console.error("Error updating user profile:", error);
         res.status(500).send("Error updating profile");
