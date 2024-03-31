@@ -37,7 +37,7 @@ router.post('/users/update/:userId', isAdmin, async (req, res) => {
     try {
         const { name, email, username, gender, password } = req.body;
         await User.findByIdAndUpdate(req.params.userId, { name, email, username, gender, password });
-        res.redirect('/api/users'); // Redirect back to the users list
+        res.redirect('/users'); // Redirect back to the users list
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -56,7 +56,7 @@ router.get('/users/roles', (req, res) => {
 router.post('/users/delete/:userId', isAdmin, async (req, res) => {
     try {
         await User.findByIdAndDelete(req.params.userId); // Use findByIdAndDelete
-        res.redirect('/api/users');
+        res.redirect('/users');
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');

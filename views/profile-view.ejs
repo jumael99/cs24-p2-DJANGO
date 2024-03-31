@@ -51,6 +51,20 @@
                         <option value="Other" <%= user.gender === 'Other' ? 'selected' : '' %>>Other</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="userRole">Role:</label>
+                    <button type="button" class="btn btn-secondary btn-block" disabled id="userRole">
+                        <% if (user.role === 'stsManager') { %>
+                            STS Manager
+                        <% } else if (user.role === 'admin') { %>
+                            Admin
+                        <% } else if (user.role === 'landfillManager') { %>
+                            Landfill Manager
+                        <% } else { %>
+                            <%= user.role %> <!-- Fallback to displaying the raw role value -->
+                        <% } %>
+                    </button>
+                </div>
             </form>
 
         </div>

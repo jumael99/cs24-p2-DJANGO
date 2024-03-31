@@ -38,9 +38,9 @@
                         <strong><%= user.username %></strong> - <span><%= user.role %></span>
                     </div>
                     <div class="user-action">
-                        <a href="/api/users/edit/<%= user._id %>" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="/users/edit/<%= user._id %>" class="btn btn-primary btn-sm">Edit</a>
                         <!-- Delete Form -->
-                        <form action="/api/users/delete/<%= user._id %>" method="POST" style="display: inline;">
+                        <form action="/users/delete/<%= user._id %>" method="POST" style="display: inline;">
                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                         </form>
                     </div>
