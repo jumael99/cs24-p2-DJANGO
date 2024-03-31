@@ -32,18 +32,24 @@ router.get('/users/edit/:userId', isAdmin, async (req, res) => {
 // Update user details including password
 router.post('/users/update/:userId', isAdmin, async (req, res) => {
     try {
-        // Extracting role along with other fields from the request body
         const { name, email, username, gender, password, role } = req.body;
 
-        // Update the user including the role, no password hashing is included for simplicity
-        await User.findByIdAndUpdate(req.params.userId, {
+        // Constructing the update object
+        let updateObject = {
             name,
             email,
             username,
             gender,
-            password, // Since no encryption is used, the password is directly updated.
             role // Updating the role as received from the form
-        });
+        };
+
+        // Only add password to the update object if it's provided
+        if (password && password.trim() !== '') {
+            updateObject.password = password;
+        }
+
+        // Update the user with the constructed update object
+        await User.findByIdAndUpdate(req.params.userId, updateObject);
 
         // Redirect back to the users list or to an appropriate page
         res.redirect('/users'); // Ensure this redirect matches where you'd like the user to go post-update

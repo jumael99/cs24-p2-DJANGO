@@ -16,23 +16,23 @@
       <h2 class="card-title text-center fw-bolder">Login</h2>
       <form action="/auth/login" method="POST">
         <div class="form-group">
-          <label for="username">Username:</label>
+          <label for="login">Username or Email:</label> <!-- Correct the label -->
           <input
-            type="text"
-            class="form-control"
-            id="username"
-            name="username"
-            required
+                  type="text"
+                  class="form-control"
+                  id="login"
+                  name="login"
+          required
           />
         </div>
         <div class="form-group">
           <label for="password">Password:</label>
           <input
-            type="password"
-            class="form-control"
-            id="password"
-            name="password"
-            required
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  name="password"
+                  required
           />
         </div>
         <button type="submit" class="btn btn-primary">Login</button>

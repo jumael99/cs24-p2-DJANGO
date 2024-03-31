@@ -13,6 +13,7 @@ const mongoDBUri =
   "mongodb+srv://ehtesamul99:55555@cluster0.ogknxls.mongodb.net/xy?retryWrites=true&w=majority&appName=Cluster0";
 const STSData = require("./models/stsData.model"); // Adjust the path as necessary based on your project structure
 const PDFDocument = require("pdfkit");
+const console = require("console");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -50,47 +51,99 @@ app.get("/login", (req, res) => {
 });
 
 // Auth routes
+// app.post("/auth/login", async (req, res) => {
+//   const { login, password } = req.body; // Extracting login and password from request body
+
+//   try {
+//     // First attempt to find the user by username
+//     let user = await User.findOne({ username: login });
+//
+//     // If no user found, then attempt to find the user by email
+//     if (!user) {
+//       user = await User.findOne({ email: login });
+//     }
+//
+//     // Check if no user was found by username/email
+//     if (!user) {
+//       return res.status(401).send("Username or email does not exist.");
+//     }
+//
+//     // Check if the password does not match
+//     if (user.password !== password) {
+//       return res.status(401).send("Incorrect password.");
+//     }
+//
+//     // Check if the user is unassigned
+//     if (user.role === 'unassigned') {
+//       // If the user is unassigned, send a message and do not proceed with login
+//       return res.status(403).send("Your account is currently unassigned and cannot log in. Please contact administration.");
+//     }
+//
+//     // Successful login, setting user session
+//     req.session.user = { id: user._id, username: user.username, role: user.role };
+//
+//     // Redirecting based on user role
+//     return res.redirect({
+//       admin: "/admin-panel",
+//       stsManager: "/sts-manager-panel",
+//       landfillManager: "/landfill-manager-panel"
+//     }[user.role] || '/'); // Default redirect if role doesn't match any key
+//   } catch (error) {
+//     res.status(500).send("Server error during authentication.");
+//   }
+// });
+
+
 app.post("/auth/login", async (req, res) => {
-  const { username, password } = req.body;
+  const { login, password } = req.body; // Extracting login and password from request body
 
-  // First, check if the username exists in the database
-  const user = await User.findOne({ username });
+  // console.log(`Database password: ${user.password}`);
+  // console.log(`Input password: ${password}`);
 
-  if (!user) {
-    // If the username isn't found, send a specific error message
-    return res.status(401).send("Username does not exist");
-  }
+  try {
+    let user = await User.findOne({ username: login }) || await User.findOne({ email: login });
 
-  // If the username exists but the password doesn't match, send a different error
-  if (user.password !== password) {
-    return res.status(401).send("Incorrect password");
-  }
+    if (!user) {
+      return res.status(401).send("Username or email does not exist.");
+    }
 
-  // If both username and password match, proceed with setting the session and redirecting
-  req.session.user = { id: user._id, username: user.username, role: user.role };
+    if (user.password !== password) {
+      return res.status(401).send("Incorrect password");
+    }
 
-  // Redirect based on role
-  switch (user.role) {
-    case "admin":
-      return res.redirect("/admin-panel");
-    case "stsManager":
-      return res.redirect("/sts-manager-panel");
-    case "unassigned":
-      return res.status(401).send("User role Unassigned!! Can't login");
-    case "landfillManager":
-      return res.redirect("/landfill-manager-panel");
-    default:
-      res.redirect('/');
-      return res.status(403).send("Access Denied");
+    req.session.user = { id: user._id, username: user.username, role: user.role };
+
+
+    // Redirect based on role
+    switch (user.role) {
+      case "admin":
+        res.redirect("/admin-panel");
+        break;
+      case "stsManager":
+        res.redirect("/sts-manager-panel");
+        break;
+      case "unassigned":
+        res.send("User role Unassigned!! Can't login");
+        break;
+      case "landfillManager":
+        res.redirect("/landfill-manager-panel");
+        break;
+      default:
+        res.send("Access Denied");
+        break;
+    }
+  } catch (error) {
+    console.error("Error during authentication:", error);
+    res.status(500).send("Server error during authentication.");
   }
 });
+
 
 //admin-route
 app.get("/admin-panel", (req, res) => {
   if (req.session.user && req.session.user.role === "admin") {
     res.render("admin-panel");
   } else {
-    res.redirect('/');
     res.status(403).send("Access Denied");
   }
 });
