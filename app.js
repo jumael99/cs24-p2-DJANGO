@@ -362,7 +362,7 @@ app.post("/print-report", async (req, res) => {
         .moveDown()
         .text(`Minimum Rounds Needed: ${rounds}`, { indent: 30 })
         .moveDown()
-        .text(`Total Cost: $${cost}`, { indent: 30 })
+        .text(`Total Cost per KM: $${cost}`, { indent: 30 })
         .moveDown()
         .text(`Cost for ${distanceKm} km Distance: $${distanceCost.toFixed(2)}`, {
           indent: 30,
