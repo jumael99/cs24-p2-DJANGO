@@ -80,6 +80,7 @@ app.post("/auth/login", async (req, res) => {
     case "landfillManager":
       return res.redirect("/landfill-manager-panel");
     default:
+      res.redirect('/');
       return res.status(403).send("Access Denied");
   }
 });
@@ -89,6 +90,7 @@ app.get("/admin-panel", (req, res) => {
   if (req.session.user && req.session.user.role === "admin") {
     res.render("admin-panel");
   } else {
+    res.redirect('/');
     res.status(403).send("Access Denied");
   }
 });
@@ -98,6 +100,7 @@ app.get("/sts-manager-panel", (req, res) => {
   if (req.session.user && req.session.user.role === "stsManager") {
     res.render("sts-manager-panel");
   } else {
+    res.redirect('/');
     res.status(403).send("Access Denied");
   }
 });
@@ -107,6 +110,7 @@ app.get("/landfill-manager-panel", (req, res) => {
   if (req.session.user && req.session.user.role === "landfillManager") {
     res.render("landfill-manager-panel");
   } else {
+    res.redirect('/');
     res.status(403).send("Access Denied");
   }
 });
@@ -129,6 +133,7 @@ app.get("/sts-manager/edit", (req, res) => {
   if (req.session.user && req.session.user.role === "stsManager") {
     res.render("edit-sts-manager");
   } else {
+    res.redirect('/');
     res.status(403).send("Access Denied");
   }
 });
@@ -139,6 +144,7 @@ app.get("/sts-manager/data-entry", (req, res) => {
   if (req.session.user && req.session.user.role === "stsManager") {
     res.render("data-entries");
   } else {
+    res.redirect('/');
     res.status(403).send("Access Denied");
   }
 });
@@ -234,8 +240,10 @@ app.post("/sts-data/create", async (req, res) => {
                 <meta http-equiv="refresh" content="3;url=/sts-manager/data-entry" />
             </head>
             <body>
+                <div class="text-center ">
                 <h1>Success!</h1>
                 <p>Your data has been successfully submitted. You will be redirected shortly.</p>
+                </div>
             </body>
             </html>
         `);

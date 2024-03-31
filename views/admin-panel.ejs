@@ -11,13 +11,17 @@
   </head>
 
   <style>
-    .box-childs>*{
-        width: 45%;
+    .box-childs > * {
+      width: 45%;
     }
   </style>
   <body>
     <div class="container card w-50 p-4 my-4">
-      <h2>Admin Panel - Create User</h2>
+      <div class="d-flex justify-content-between align-items-center">
+        <h3>Admin Panel - Create User</h3>
+
+        <a href="/auth/logout" class="btn btn-warning mx-4">Logout</a>
+      </div>
       <form action="/users" method="POST">
         <div class="d-flex justify-content-between box-childs">
           <div class="form-group">
@@ -93,10 +97,6 @@
           <a href="/profile" class="btn btn-info">Edit profile</a>
         </div>
         <div class="border-top my-3"></div>
-        <h3>Logout from Your App</h3>
-        <div class="my-4">
-          <a href="/auth/logout" class="btn btn-warning">Logout</a>
-        </div>
       </form>
     </div>
   </body>
