@@ -1,8 +1,20 @@
-#what i did: 
-------------------
-docker-compose up
+#How to start: 
+step-1: docker-compose up
+step-2: goto your browser and go to `http://localhost:5000`
+
+#How to stop: (simple press ctrl+c twice on cmd)
+docker-compose down
+
 
 #what you can do: 
 --------------------------
-docker build --tag=sol:latest .
-docker run -it -p 8000:8000 --rm --name=sol sol:latest
+docker build --tag=django:latest .
+docker run -it -p 5000:5000 --rm --name=django django:latest
+
+---------------------
+
+#Stop Docker containers: `docker stop $(docker ps -a -q)`
+#Remove Docker Containers: `docker rm $(docker ps -a -q)`
+#Remove Docker Images: `docker rmi $(docker images -a -q)`
+#Remove Docker Volumes: `docker volume rm $(docker volume ls -q)`
+#Prune Unused Resources: `docker system prune -a`
