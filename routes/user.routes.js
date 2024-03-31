@@ -77,23 +77,38 @@ router.delete('/users/:userId', isAdmin, async (req, res) => {
 });
 
 
-router.post('/users', isAdmin, async (req, res) => {
+
+router.post("/users", async (req, res) => {
     try {
-        const { username, password, role } = req.body;
-
-        // Create a new user instance with the provided details
-        let user = new User({ username, password, role });
-
-        // Save the user to the database
-        user = await user.save();
-
-        // Redirect to the admin panel page after successful user creation
-        res.redirect('/admin-panel');
-    } catch (err) {
-        console.error(err); // Logging the error to the console for debugging
-        res.status(500).send('Server error'); // Sending a generic server error message
+        const { name, email, username, password, gender, role } = req.body;
+        // Use your User model to create a new user document
+        const newUser = await User.create({
+            name,
+            email,
+            username,
+            password, // Make sure to hash passwords in production
+            gender,
+            role
+        });
+        res.status(201).send(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>User has been created</title>
+                <meta http-equiv="refresh" content="2;url=/admin-panel" />
+            </head>
+            <body>
+                <h1>Success!</h1>
+                <p>Your data has been successfully submitted. You will be redirected shortly.</p>
+            </body>
+            </html>
+        `);
+    } catch (error) {
+        console.error("Error creating user:", error);
+        res.status(500).send("Error creating user");
     }
 });
+
 
 
 

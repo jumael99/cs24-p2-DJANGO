@@ -1,55 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Admin Panel</title>
-    <!-- Bootstrap CSS for styling -->
-    <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div class="container card w-50 p-4 my-4">
-      <h2>Admin Panel - Create User</h2>
-      <form action="/api/users" method="POST">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="container card w-50 p-4 my-4">
+    <h2>Admin Panel - Create User</h2>
+    <form action="/api/users" method="POST">
         <div class="form-group">
-          <label for="username">Username:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="username"
-            name="username"
-            required
-          />
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" id="name" name="name" required/>
         </div>
         <div class="form-group">
-          <label for="password">Password:</label>
-          <input
-            type="password"
-            class="form-control"
-            id="password"
-            name="password"
-            required
-          />
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" name="email" required/>
         </div>
         <div class="form-group">
-          <label for="role">Role:</label>
-          <select class="form-control" id="role" name="role" required>
-            <option value="stsManager">STS Manager</option>
-            <option value="landfillManager">Landfill Manager</option>
-            <option value="unassigned">Unassigned</option>
-          </select>
+            <label for="username">Username:</label>
+            <input type="text" class="form-control" id="username" name="username" required/>
         </div>
-        <button type="submit" class="btn btn-primary">Create User</button>
-      </form>
-      <div class="flex align-items-center justify-content-evenly my-4">
-        <a href="/api/users" class="btn btn-secondary">Get All Users</a>
-        <a href="/api/users/roles" class="btn btn-secondary">See all roles</a>
-        <a href="/auth/logout" class="btn btn-warning">Logout</a>
-        <a href="/profile" class="btn btn-info">Edit profile</a>
-      </div>
-    </div>
-  </body>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" class="form-control" id="password" name="password" required/>
+        </div>
+        <div class="form-group">
+            <label for="gender">Gender:</label>
+            <select class="form-control" id="gender" name="gender" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="role">Role:</label>
+            <select class="form-control" id="role" name="role" required>
+                <option value="stsManager">STS Manager</option>
+                <option value="landfillManager">Landfill Manager</option>
+                <option value="unassigned">Unassigned</option>
+            </select>
+        </div>
+        <div class="form-group">
+
+            <button type="submit" class="btn btn-primary">Create User</button>
+        </div>
+        <div class="border-top my-3"></div>
+        <h3>Manage Users and Edit Profile</h3>
+        <div class="my-4">
+            <a href="/api/users" class="btn btn-secondary">Get All Users</a>
+            <a href="/api/users/roles" class="btn btn-secondary">See all roles</a>
+            <a href="/profile" class="btn btn-info">Edit profile</a>
+        </div>
+        <div class="border-top my-3"></div>
+        <h3>Logout from Your App</h3>
+        <div class="my-4">
+            <a href="/auth/logout" class="btn btn-warning">Logout</a>
+        </div>
+    </form>
+</div>
+</body>
 </html>

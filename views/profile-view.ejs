@@ -69,12 +69,8 @@
                     <button type="submit" class="btn btn-primary btn-block">
                         Update Profile
                     </button>
-                    <!-- Link to STS Manager Panel -->
-                    <a
-                            href="<%= role === 'admin' ? 'http://localhost:3000/admin-panel' : 'http://localhost:3000/sts-manager-panel' %>"
-                            class="btn btn-primary btn-block"
-                    >Go back</a
-                    >
+                    <!-- Link to the appropriate Panel based on role -->
+                    <a href="<%= role === 'admin' ? 'http://localhost:3000/admin-panel' : role === 'stsManager' ? 'http://localhost:3000/sts-manager-panel' : 'http://localhost:3000/landfill-manager-panel' %>" class="btn btn-primary btn-block">Go back</a>
                 </div>
             </form>
         </div>
