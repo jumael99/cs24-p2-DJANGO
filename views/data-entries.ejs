@@ -7,21 +7,9 @@
   <!-- Bootstrap CSS for styling -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
   <style>
-    /* Additional styles for better button alignment and styling */
-    .back-button {
-      display: inline-block;
-      margin-top: 20px; /* Adjust as needed for alignment */
-      text-decoration: none;
-      color: #fff;
-      background-color: #007bff; /* Bootstrap primary button color */
-      padding: 10px 15px;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-    .back-button:hover {
-      color: #fff;
-      background-color: #0056b3; /* Slightly darker on hover */
-      text-decoration: none;
+    /* Additional styles */
+    .distance-display {
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -41,10 +29,59 @@
       <label for="startTime">Starting Time:</label>
       <input type="time" class="form-control" id="startTime" name="startTime" required />
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <!-- Dropdown for landfill selection -->
+    <div class="form-group">
+      <label for="landfillSelection">Select Landfill (Select Distance for STS Efficiency):</label>
+      <select class="form-control" id="landfillSelection" name="landfillSelection" onchange="showDistance()">
+        <option value="">Select Landfill</option>
+        <option value="Amibazar">Amibazar Landfill</option>
+        <option value="Matuail">Matuail Landfill</option>
+      </select>
+    </div>
+    <!-- Display for distance -->
+    <div class="form-group distance-display" id="distanceDisplay" style="display: none;">
+      <label for="distanceKm">Distance (Km):</label>
+      <input type="text" class="form-control" id="distanceKm" name="distanceKm" readonly />
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Submit</button>
   </form>
-  <!-- Updated Go back link -->
-  <a href="/sts-manager-panel" class="back-button">Go back</a>
+  <!-- Updated Go back link to match the size of the submit button -->
+  <a href="/sts-manager-panel" class="btn btn-primary back-button mt-3">Go back</a>
 </div>
+
+<script>
+  // Generate initial random distances for both landfills when the page loads
+  let amibazarDistance = getRandomDistance(15, 23);
+  let matuailDistance = getRandomDistance(15, 23);
+
+  function showDistance() {
+    const selection = document.getElementById('landfillSelection').value;
+    const distanceDisplay = document.getElementById('distanceDisplay');
+    const distanceKm = document.getElementById('distanceKm');
+
+    if (selection === 'Amibazar') {
+      distanceDisplay.style.display = 'block';
+      distanceKm.value = amibazarDistance; // Use the pre-generated distance for Amibazar
+    } else if (selection === 'Matuail') {
+      distanceDisplay.style.display = 'block';
+      distanceKm.value = matuailDistance; // Use the pre-generated distance for Matuail
+    } else {
+      distanceDisplay.style.display = 'none';
+      distanceKm.value = ''; // Clear the value if no landfill is selected
+    }
+  }
+
+  function getRandomDistance(min, max) {
+    // Generate a random number between min and max, inclusive
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  // Optional: Reset distances when the form is submitted
+  document.querySelector('form').addEventListener('submit', function() {
+    amibazarDistance = getRandomDistance(15, 23);
+    matuailDistance = getRandomDistance(15, 23);
+  });
+</script>
+
 </body>
 </html>
