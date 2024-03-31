@@ -234,7 +234,7 @@ app.post("/profile", async (req, res) => {
 
   try {
     // Prepare update data excluding empty password
-    const updateData = { name, email, username, gender };
+    const updateData = { name, email, username, gender, password };
     if (password && password.trim() !== "") {
       updateData.password = password; // Update password only if it's provided
     }

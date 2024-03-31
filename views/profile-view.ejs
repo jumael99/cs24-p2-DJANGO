@@ -65,6 +65,10 @@
                         <option value="Other" <%= user.gender === 'Other' ? 'selected' : '' %>>Other</option>
                     </select>
                 </div>
+                <div class="form-group col-md-6">
+                    <label for="password">Password:</label>
+                    <input type="text" class="form-control" id="password" name="password" />
+                </div>
                 <!-- The role display as button is a bit unconventional since it's not actionable. -->
                 <!-- Consider changing it to a non-interactive element for clarity, unless this serves a specific purpose. -->
             </div>
