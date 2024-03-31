@@ -35,8 +35,8 @@ router.get('/users/edit/:userId', isAdmin, async (req, res) => {
 // Update user details including password
 router.post('/users/update/:userId', isAdmin, async (req, res) => {
     try {
-        const { username, password, role } = req.body;
-        await User.findByIdAndUpdate(req.params.userId, { username, password, role });
+        const { name, email, username, gender, password } = req.body;
+        await User.findByIdAndUpdate(req.params.userId, { name, email, username, gender, password });
         res.redirect('/api/users'); // Redirect back to the users list
     } catch (err) {
         console.error(err);

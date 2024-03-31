@@ -151,7 +151,7 @@ app.get("/profile", (req, res) => {
 
 //PUT /profile for Updating the Logged-in User's Profile
 app.post("/profile", async (req, res) => {
-    const {username, password} = req.body; // You can include other fields that are allowed to be updated.
+    const { name, email, username, gender, password } = req.body;// You can include other fields that are allowed to be updated.
 
     if (!req.session.user) {
         return res.status(403).send("Not logged in");
@@ -180,7 +180,7 @@ app.get("/landfill-data-entry", (req, res) => {
 
 //sts-data post from ejs form
 // Example route handler for form submission
-app.post("/sts-data/create", async (req, res) => {
+app.post("/sts-data/create", async (req, res) => { // create is ok now
     const {stsNumber, wasteWeight, startTime, landfillSelection, distanceKm} = req.body;
 
     // Create a new Date object for today

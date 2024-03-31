@@ -1,42 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Edit User</title>
-    <!-- Include Bootstrap CSS from CDN -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Profile</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2 class="text-center my-4">Edit User</h2>
-            <form action="/api/users/update/<%= user._id %>" method="POST" class="mb-3">
-                <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" class="form-control" id="username" name="username" value="<%= user.username %>" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="New Password" >
-                </div>
-                <div class="form-group">
-                    <label for="role">Role:</label>
-                    <select class="form-control" id="role" name="role">
-                        <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
-                        <option value="stsManager" <%= user.role === 'stsManager' ? 'selected' : '' %>>STS Manager</option>
-                        <option value="landfillManager" <%= user.role === 'landfillManager' ? 'selected' : '' %>>Landfill Manager</option>
-                        <option value="unassigned" <%= user.role === 'unassigned' ? 'selected' : '' %>>Unassigned</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Update User</button>
-            </form>
+<div class="container card w-50 p-4 my-4">
+    <!-- Displaying user's name and username -->
+    <h3>User <%= user.name %> is changing his profile. Username is <%= user.username %></h3>
+    <h2>Edit Profile</h2>
+    <form action="/api/users/update/<%= user._id %>" method="POST">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" id="name" name="name" required value="<%= user.name %>" />
         </div>
-    </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" name="email" required value="<%= user.email %>" />
+        </div>
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" class="form-control" id="username" name="username" required value="<%= user.username %>" />
+        </div>
+        <div class="form-group">
+            <label for="gender">Gender:</label>
+            <select class="form-control" id="gender" name="gender" required>
+                <option value="Male" <%= user.gender === 'Male' ? 'selected' : '' %>>Male</option>
+                <option value="Female" <%= user.gender === 'Female' ? 'selected' : '' %>>Female</option>
+                <option value="Other" <%= user.gender === 'Other' ? 'selected' : '' %>>Other</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <!-- It's best practice to leave the password field empty for security reasons -->
+            <input type="password" class="form-control" id="password" name="password" placeholder="Enter new password" />
+        </div>
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+    </form>
 </div>
-
-<!-- Include Bootstrap JS and its dependencies -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
