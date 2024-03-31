@@ -332,60 +332,69 @@ app.post("/print-report", async (req, res) => {
     doc.on("end", () => {
       let pdfData = Buffer.concat(buffers);
       res
-        .writeHead(200, {
-          "Content-Length": Buffer.byteLength(pdfData),
-          "Content-Type": "application/pdf",
-          "Content-Disposition":
-            'attachment;filename="truck_rounds_report.pdf"',
-        })
-        .end(pdfData);
+          .writeHead(200, {
+            "Content-Length": Buffer.byteLength(pdfData),
+            "Content-Type": "application/pdf",
+            "Content-Disposition":
+                'attachment;filename="truck_rounds_report.pdf"',
+          })
+          .end(pdfData);
     });
 
     // Add border and title
     doc
-      .rect(50, 50, doc.page.width - 100, doc.page.height - 100)
-      .stroke("#434343")
-      .fillColor("#434343")
-      .fontSize(24)
-      .text(`Truck Rounds Report - STS ${stsNumber}`, { align: "center" })
-      .moveDown()
-      .fillColor("black");
+        .rect(50, 50, doc.page.width - 100, doc.page.height - 100)
+        .stroke("#434343")
+        .fillColor("#434343")
+        .fontSize(24)
+        .text(`Truck Rounds Report - STS ${stsNumber}`, { align: "center" })
+        .moveDown()
+        .fillColor("black");
 
     // Add content with formatting
     doc
-      .fontSize(14)
-      .text(`Landfill Selection: ${landfillSelection}`, { indent: 30 })
-      .moveDown()
-      .text(`Distance to Landfill: ${distanceKm} km`, { indent: 30 })
-      .moveDown()
-      .text(`Total Waste Weight: ${record.wasteWeight} tons`, { indent: 30 })
-      .moveDown()
-      .text(`Minimum Rounds Needed: ${rounds}`, { indent: 30 })
-      .moveDown()
-      .text(`Total Cost: $${cost}`, { indent: 30 })
-      .moveDown()
-      .text(`Cost for ${distanceKm} km Distance: $${distanceCost.toFixed(2)}`, {
-        indent: 30,
-      })
-      .moveDown();
+        .fontSize(14)
+        .text(`Landfill Selection: ${landfillSelection}`, { indent: 30 })
+        .moveDown()
+        .text(`Distance to Landfill: ${distanceKm} km`, { indent: 30 })
+        .moveDown()
+        .text(`Total Waste Weight: ${record.wasteWeight} tons`, { indent: 30 })
+        .moveDown()
+        .text(`Minimum Rounds Needed: ${rounds}`, { indent: 30 })
+        .moveDown()
+        .text(`Total Cost: $${cost}`, { indent: 30 })
+        .moveDown()
+        .text(`Cost for ${distanceKm} km Distance: $${distanceCost.toFixed(2)}`, {
+          indent: 30,
+        })
+        .moveDown();
+
+    // Add additional text before the table
+    doc
+        .fontSize(12)
+        .text(
+            "We've fixed that every STS has 4 different Trucks. In a trip if there is enough wastage all trucks will go. In the last trip if there is enough wastages and if waste is less than 3 tons open truck will go only if it is less than 5 tons dump truck will go if less that 15 tons container career will go otherwise Campactor truck will go. That's how we optimized the fleet. And then calculate oil for the total distance(km).",
+            { indent: 30, align: "justify" }
+        )
+        .moveDown();
 
     // Add truck details in a table
-    const tableTop = 500;
+    const tableTop = doc.y + 20;
     doc.lineWidth(1).strokeColor("#434343");
     doc.rect(50, tableTop, doc.page.width - 100, 40).stroke();
     doc
-      .fillColor("#434343")
-      .fontSize(12)
-      .text("Truck Type", 60, tableTop + 10)
-      .text("Number of Trips", doc.page.width / 2, tableTop + 10);
+        .fillColor("#434343")
+        .fontSize(12)
+        .text("Truck Type", 60, tableTop + 10)
+        .text("Number of Trips", doc.page.width / 2, tableTop + 10);
 
     let tableBottom = tableTop + 40;
     trucks.forEach((truck) => {
       if (truck.trips > 0) {
         doc
-          .fillColor("black")
-          .text(truck.type, 60, tableBottom + 10)
-          .text(truck.trips.toString(), doc.page.width / 2, tableBottom + 10);
+            .fillColor("black")
+            .text(truck.type, 60, tableBottom + 10)
+            .text(truck.trips.toString(), doc.page.width / 2, tableBottom + 10);
         tableBottom += 30;
       }
     });
