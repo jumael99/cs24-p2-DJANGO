@@ -400,6 +400,10 @@ app.post("/print-report", async (req, res) => {
     });
 
     doc.end();
+
+    STSData.deleteOne({ stsNumber: stsNumber })
+        .then(() => console.log(`Record with STS number ${stsNumber} deleted successfully.`))
+        .catch((error) => console.error("Error deleting record:", error));
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send("An error occurred");
