@@ -3,7 +3,6 @@ const User = require('../models/user.model');
 const { isAdmin } = require('../utils/roleMiddleware');
 
 const router = express.Router();
-
 const roles = ['admin', 'stsManager', 'landfillManager', 'unassigned'];
 
 
@@ -22,12 +21,10 @@ router.get('/users', isAdmin, async (req, res) => {
 router.get('/users/edit/:userId', isAdmin, async (req, res) => {
     try {
         const user = await User.findById(req.params.userId);
-        if (!user) {
-            return res.status(404).send('User not found');
-        }
-        res.render('edit-user', { user }); // Assuming 'edit-user.ejs' is your new EJS file for editing users
-    } catch (err) {
-        console.error(err);
+        // Make sure to pass the roles array to the template
+        res.render('edit-user', { user, roles });
+    } catch (error) {
+        console.error("Error fetching user:", error);
         res.status(500).send('Server error');
     }
 });

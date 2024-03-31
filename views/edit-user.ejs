@@ -41,7 +41,7 @@
             <label for="role">Role:</label>
             <select class="form-control" id="role" name="role" required>
                 <% roles.forEach(function(role) { %>
-                    <option value="<%= role.name %>" <%= user.role === role.name ? 'selected' : '' %>><%= role.name %></option>
+                    <option value="<%= role %>" <%= user.role === role ? 'selected' : '' %>><%= role %></option>
                 <% }); %>
             </select>
         </div>

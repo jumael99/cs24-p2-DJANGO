@@ -19,7 +19,7 @@
 </head>
 <body class="bg-light position-relative">
 <div class="border-5 text-center shadow-lg p-2 mb-4">
-    Current User: <%= user.username %>
+    Current User: <%= user.name %>
 </div>
 <div class="container py-5 mycarddetails my-5 shadow">
     <div class="text-center mb-4 card-title">
@@ -29,7 +29,7 @@
         <div class="col-md-12">
             <form action="/profile" method="post">
                 <h3 class="text-center border-bottom py-2">
-                    User: <%= user.username %>
+                    User: <%= user.name %>
                 </h3>
                 <div class="form-group mt-5">
                     <label for="name">Name:</label>
@@ -65,13 +65,18 @@
                         <% } %>
                     </button>
                 </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" class="form-control" id="password" name="password"/>
+                </div>
+                <div class="d-grid gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary btn-block">Update Profile</button>
+                    <a href="<%= role === 'admin' ? '/admin-panel' : role === 'stsManager' ? '/sts-manager-panel' : '/landfill-manager-panel' %>" class="btn btn-primary btn-block">Go back</a>
+                </div>
             </form>
 
         </div>
-        <div class="d-grid gap-2 mt-3">
-            <button type="submit" class="btn btn-primary btn-block">Update Profile</button>
-            <a href="<%= role === 'admin' ? '/admin-panel' : role === 'stsManager' ? '/sts-manager-panel' : '/landfill-manager-panel' %>" class="btn btn-primary btn-block">Go back</a>
-        </div>
+
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

@@ -167,6 +167,7 @@ app.get("/profile", async (req, res) => {
     res.redirect("/login");
   }
 });
+
 //PUT /profile for Updating the Logged-in User's Profile
 app.post("/profile", async (req, res) => {
   const { name, email, username, gender, password } = req.body;
