@@ -11,6 +11,7 @@ router.get('/users', isAdmin, async (req, res) => {
     try {
         const users = await User.find();
         res.render('users-list', { users }); // Render the view with the users data
+
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -53,6 +54,8 @@ router.post('/users/update/:userId', isAdmin, async (req, res) => {
 
         // Redirect back to the users list or to an appropriate page
         res.redirect('/users'); // Ensure this redirect matches where you'd like the user to go post-update
+
+
     } catch (err) {
         console.error("Error updating user profile:", err);
         res.status(500).send('Server error');
