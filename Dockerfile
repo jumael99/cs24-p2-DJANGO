@@ -1,6 +1,6 @@
 FROM node:alpine
 
-WORKDIR /app
+WORKDIR /
 
 COPY package.json .
 
@@ -10,6 +10,6 @@ COPY *.env .
 
 COPY . .
 
-EXPOSE 8000
+EXPOSE 5000
 
-CMD [ "node", "index.js" ]
+CMD [ "node", "app.js" ]
