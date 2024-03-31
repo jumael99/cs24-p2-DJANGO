@@ -80,6 +80,7 @@ app.post("/auth/login", async (req, res) => {
     case "landfillManager":
       return res.redirect("/landfill-manager-panel");
     default:
+      res.redirect('/');
       return res.status(403).send("Access Denied");
   }
 });
@@ -89,6 +90,7 @@ app.get("/admin-panel", (req, res) => {
   if (req.session.user && req.session.user.role === "admin") {
     res.render("admin-panel");
   } else {
+    res.redirect('/');
     res.status(403).send("Access Denied");
   }
 });
@@ -98,16 +100,17 @@ app.get("/sts-manager-panel", (req, res) => {
   if (req.session.user && req.session.user.role === "stsManager") {
     res.render("sts-manager-panel");
   } else {
-    res.status(403).send("Access Denied");
+    res.redirect('/login');
   }
 });
 
 // Landfill Manager Panel Route
 app.get("/landfill-manager-panel", (req, res) => {
-  if (req.session.user && req.session.user.role === "landfillManager") {
+  // Check if the user is logged in and has the correct role
+  if (req.session.user && (req.session.user.role === "landfillManager" || req.session.user.role === "admin")) {
     res.render("landfill-manager-panel");
   } else {
-    res.status(403).send("Access Denied");
+    res.redirect('/login');
   }
 });
 
@@ -129,7 +132,7 @@ app.get("/sts-manager/edit", (req, res) => {
   if (req.session.user && req.session.user.role === "stsManager") {
     res.render("edit-sts-manager");
   } else {
-    res.status(403).send("Access Denied");
+    res.redirect('/login');
   }
 });
 
@@ -139,7 +142,7 @@ app.get("/sts-manager/data-entry", (req, res) => {
   if (req.session.user && req.session.user.role === "stsManager") {
     res.render("data-entries");
   } else {
-    res.status(403).send("Access Denied");
+    res.redirect('/login');
   }
 });
 
@@ -198,7 +201,13 @@ app.post("/profile", async (req, res) => {
 
 //landfill data-entry
 app.get("/landfill-data-entry", (req, res) => {
-  res.render("landfill-data-entry");
+  // Check if the user is logged in and has the correct role
+  if (req.session.user && (req.session.user.role === "landfillManager" || req.session.user.role === "admin")) {
+    res.render("landfill-data-entry");
+  } else {
+    res.redirect('/');
+    // As before, ensure you're not attempting to send multiple responses.
+  }
 });
 
 //sts-data post from ejs form
@@ -235,8 +244,10 @@ app.post("/sts-data/create", async (req, res) => {
                 <meta http-equiv="refresh" content="3;url=/sts-manager/data-entry" />
             </head>
             <body>
+                <div class="text-center ">
                 <h1>Success!</h1>
                 <p>Your data has been successfully submitted. You will be redirected shortly.</p>
+                </div>
             </body>
             </html>
         `);
