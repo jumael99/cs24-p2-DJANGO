@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   django:
-    build: ./
+    build: . #represents the build in current directory, dont change
     # container_name: mytrain
     ports:
       - "5000:5000"
