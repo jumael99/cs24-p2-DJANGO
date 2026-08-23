@@ -21,7 +21,7 @@ In **Cloudflare Dashboard → Workers & Pages**:
 
 The Worker name must match the `name` value in `wrangler.toml`.
 
-## Add runtime secrets
+## Add secrets
 
 Open **Settings → Variables and Secrets → Add**. Add both values as **Secret**, not plain-text variables:
 
@@ -36,6 +36,12 @@ You can also add the secrets with Wrangler after authenticating:
 npx wrangler secret put MONGODB_URI
 npx wrangler secret put SESSION_SECRET
 ```
+
+### First deployment from Git
+
+If the Worker has not completed its first deployment yet, Cloudflare may not expose runtime secret controls for it. In **Settings → Build → Variables and secrets**, add `MONGODB_URI` and `SESSION_SECRET` as encrypted build secrets. The repository's deploy script passes those values to Wrangler with `--secrets-file`, which stores them as encrypted Worker runtime secrets during deployment. The temporary secrets file exists only inside the build container and is deleted immediately afterward.
+
+Add both names together. The deploy script stops with a clear error when only one is available, and it never prints either value to the build log.
 
 ## Local development
 
