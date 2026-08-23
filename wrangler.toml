@@ -1,0 +1,17 @@
+name = "cs24-p2-django"
+main = "worker.js"
+compatibility_date = "2026-08-23"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+PORT = "5000"
+NODE_ENV = "production"
+
+[secrets]
+required = ["MONGODB_URI", "SESSION_SECRET"]
+
+[assets]
+directory = "./public"
+
+[observability]
+enabled = true

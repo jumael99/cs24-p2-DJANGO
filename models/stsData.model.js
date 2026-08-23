@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose/index.js');
 
 const stsDataSchema = new mongoose.Schema({
     stsNumber: { type: Number, required: true },
