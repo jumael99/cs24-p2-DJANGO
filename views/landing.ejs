@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#17201b" />
+  <meta name="description" content="EcoSync coordinates transfer-station and landfill operations from one clear workspace." />
+  <title>EcoSync | Waste operations, coordinated</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="landing-body">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <header class="landing-header">
+    <div class="landing-header__inner">
+      <a class="brand brand--inverse" href="/" aria-label="EcoSync home">
+        <span class="brand__mark" aria-hidden="true">E</span>
+        <span class="brand__text">
+          <span class="brand__name">EcoSync</span>
+          <span class="brand__descriptor">Municipal waste operations</span>
+        </span>
+      </a>
+      <a class="btn btn--on-dark" href="/login">Team sign in</a>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="landing-hero" aria-labelledby="hero-title">
+      <div class="landing-hero__content">
+        <p class="eyebrow eyebrow--light">One connected operation</p>
+        <h1 id="hero-title">Waste movement,<br />made accountable.</h1>
+        <p>EcoSync gives municipal teams a shared view of access, transfer-station activity, and landfill reporting—from entry to final record.</p>
+        <a class="hero-link" href="#workspaces">Explore the workspaces <span aria-hidden="true">↓</span></a>
+      </div>
+
+      <div class="operations-brief" aria-label="Platform workflow">
+        <p class="operations-brief__label">Daily workflow</p>
+        <ol>
+          <li><span>01</span> Assign operational access</li>
+          <li><span>02</span> Record each STS movement</li>
+          <li><span>03</span> Download landfill reports</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="workspace-section" id="workspaces" aria-labelledby="workspaces-title">
+      <div class="workspace-section__heading">
+        <div>
+          <p class="eyebrow">Role-based workspaces</p>
+          <h2 id="workspaces-title">See the platform from every desk.</h2>
+        </div>
+        <p>Choose a role to open a safe, read-only client preview. No username or password is needed.</p>
+      </div>
+
+      <div class="role-grid">
+        <article class="role-card">
+          <div>
+            <span class="role-card__number">01</span>
+            <p class="role-card__scope">Governance</p>
+            <h3>Admin</h3>
+            <p>Create accounts, assign roles, and maintain access across the operation.</p>
+          </div>
+          <form action="/demo/admin" method="post">
+            <button class="role-card__link" type="submit">View as Admin <span aria-hidden="true">↗</span></button>
+          </form>
+        </article>
+
+        <article class="role-card">
+          <div>
+            <span class="role-card__number">02</span>
+            <p class="role-card__scope">Transfer station</p>
+            <h3>STS Manager</h3>
+            <p>Capture load weight, departure time, destination, and estimated route distance.</p>
+          </div>
+          <form action="/demo/stsManager" method="post">
+            <button class="role-card__link" type="submit">View as STS Manager <span aria-hidden="true">↗</span></button>
+          </form>
+        </article>
+
+        <article class="role-card role-card--accent">
+          <div>
+            <span class="role-card__number">03</span>
+            <p class="role-card__scope">Final destination</p>
+            <h3>Landfill Manager</h3>
+            <p>Retrieve movement details and download a clear, print-ready PDF report on any device.</p>
+          </div>
+          <form action="/demo/landfillManager" method="post">
+            <button class="role-card__link" type="submit">View as Landfill Manager <span aria-hidden="true">↗</span></button>
+          </form>
+        </article>
+      </div>
+    </section>
+
+    <section class="landing-proof" aria-label="Platform qualities">
+      <p>Built for field operations</p>
+      <div class="landing-proof__items">
+        <span>Role-based access</span>
+        <span>Mobile-ready reporting</span>
+        <span>Cloud deployment</span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="landing-footer">
+    <span>EcoSync</span>
+    <span>Waste Management &amp; Logistics Platform</span>
+  </footer>
+</body>
+</html>

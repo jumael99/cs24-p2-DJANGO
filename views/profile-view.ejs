@@ -28,6 +28,10 @@
       <p class="lede">Keep your personal and sign-in information current.</p>
     </div>
 
+    <% if (isDemo) { %>
+      <div class="demo-notice" role="status"><strong>Client preview</strong><span>This sample profile is read-only and does not represent a live account.</span><a href="/#workspaces">Switch role</a></div>
+    <% } %>
+
     <div class="section-stack">
       <section class="profile-summary" aria-label="Current account summary">
         <div>
@@ -81,7 +85,9 @@
             </div>
           </div>
           <div class="surface__footer actions">
-            <button class="btn btn--primary" type="submit">Save changes</button>
+            <% if (!isDemo) { %>
+              <button class="btn btn--primary" type="submit">Save changes</button>
+            <% } %>
             <a class="btn btn--secondary" href="<%= role === 'admin' ? '/admin-panel' : role === 'stsManager' ? '/sts-manager-panel' : '/landfill-manager-panel' %>">Cancel</a>
           </div>
         </form>

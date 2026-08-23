@@ -18,7 +18,7 @@
           <span class="brand__descriptor">Landfill workspace</span>
         </span>
       </a>
-      <a class="btn btn--quiet" href="/auth/logout">Sign out</a>
+      <a class="btn btn--quiet" href="/auth/logout"><%= isDemo ? 'Exit demo' : 'Sign out' %></a>
     </div>
   </header>
 
@@ -28,6 +28,10 @@
       <h1>Landfill Manager workspace</h1>
       <p class="lede">Retrieve transfer-station reports and manage your account from one place.</p>
     </div>
+
+    <% if (isDemo) { %>
+      <div class="demo-notice" role="status"><strong>Client preview</strong><span>Generate the sample STS 101 report to test PDF download on this device.</span><a href="/#workspaces">Switch role</a></div>
+    <% } %>
 
     <div class="dashboard-grid">
       <section class="task-card">

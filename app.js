@@ -8,8 +8,7 @@ const { isAdmin } = require("./utils/roleMiddleware");
 const User = require("./models/user.model");
 const STSData = require("./models/stsData.model");
 const { calculateTruckRounds } = require("./truckCalculations");
-const PDFDocument = require("pdfkit");
-const ejs = require("ejs");
+const { buildTransportReportPdf } = require("./utils/reportPdf");
 const templates = require("./views/templates");
 
 const app = express();
@@ -47,17 +46,6 @@ async function connectDB() {
   await dbPromise;
 }
 
-// Middleware to ensure DB connection per request
-app.use(async (req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (err) {
-    console.error("MongoDB connection error:", err);
-    next();
-  }
-});
-
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -75,33 +63,33 @@ app.use(
   })
 );
 
-// EJS Template Engine with in-memory bundled templates support
-app.engine("ejs", (filePath, options, callback) => {
+// Public pages and read-only demo sessions do not need a database connection.
+// All real authenticated and data operations still connect through MongoDB.
+app.use(async (req, res, next) => {
+  const isPublicPath =
+    req.path === "/" ||
+    req.path === "/login" ||
+    req.path === "/auth/logout" ||
+    req.path.startsWith("/demo/");
+  const isDemoSession = Boolean(req.session && req.session.user && req.session.user.demo);
+
+  if (isPublicPath || isDemoSession) {
+    return next();
+  }
+
   try {
-    const normalized = filePath.replace(/\\/g, "/");
-    const match = normalized.match(/([^\/]+)\.ejs$/);
-    const viewName = match ? match[1] : filePath;
-
-    if (templates[viewName]) {
-      const html = templates[viewName](options);
-      return callback(null, html);
-    }
-
-    const fs = require("fs");
-    const content = fs.readFileSync(filePath, "utf8");
-    const html = ejs.render(content, options);
-    return callback(null, html);
+    await connectDB();
+    return next();
   } catch (err) {
-    return callback(err);
+    console.error("MongoDB connection error:", err);
+    return next();
   }
 });
 
 app.set("view engine", "ejs");
 
-// Express resolves view files on disk before invoking a template engine.
-// Render bundled templates directly so res.render() also works in Workers,
-// where the views directory is not available as a normal filesystem path.
-const renderFromFileSystem = app.render.bind(app);
+// Render precompiled templates directly. Cloudflare Workers does not expose
+// the views directory as a normal filesystem and disallows runtime compilation.
 app.render = (viewName, options, callback) => {
   const normalizedName = viewName
     .replace(/\\/g, "/")
@@ -110,7 +98,7 @@ app.render = (viewName, options, callback) => {
     .replace(/\.ejs$/, "");
 
   if (!templates[normalizedName]) {
-    return renderFromFileSystem(viewName, options, callback);
+    return callback(new Error(`Unknown view: ${normalizedName}`));
   }
 
   try {
@@ -125,11 +113,47 @@ app.render = (viewName, options, callback) => {
 app.use("/", userRoutes);
 
 app.get("/", (req, res) => {
-  res.render("login");
+  res.render("landing");
 });
 
 app.get("/login", (req, res) => {
   res.render("login");
+});
+
+const demoRoles = {
+  admin: {
+    destination: "/admin-panel",
+    name: "Demo Administrator",
+    username: "demo.admin",
+  },
+  stsManager: {
+    destination: "/sts-manager-panel",
+    name: "Demo STS Manager",
+    username: "demo.sts",
+  },
+  landfillManager: {
+    destination: "/landfill-manager-panel",
+    name: "Demo Landfill Manager",
+    username: "demo.landfill",
+  },
+};
+
+// Client-safe workspace previews. Demo sessions never write to live data.
+app.post("/demo/:role", (req, res) => {
+  const selectedRole = demoRoles[req.params.role];
+
+  if (!selectedRole) {
+    return res.status(404).send("Workspace not found");
+  }
+
+  req.session.user = {
+    demo: true,
+    name: selectedRole.name,
+    role: req.params.role,
+    username: selectedRole.username,
+  };
+
+  return res.redirect(selectedRole.destination);
 });
 
 // Auth login route
@@ -149,7 +173,7 @@ app.post("/auth/login", async (req, res) => {
       return res.status(401).send("Incorrect password");
     }
 
-    req.session.user = { id: user._id.toString(), username: user.username, role: user.role };
+    req.session.user = { demo: false, id: user._id.toString(), username: user.username, role: user.role };
 
     // Redirect based on role
     switch (user.role) {
@@ -158,9 +182,6 @@ app.post("/auth/login", async (req, res) => {
         break;
       case "stsManager":
         res.redirect("/sts-manager-panel");
-        break;
-      case "unassigned":
-        res.send("User role Unassigned!! Can't login");
         break;
       case "landfillManager":
         res.redirect("/landfill-manager-panel");
@@ -178,7 +199,7 @@ app.post("/auth/login", async (req, res) => {
 // Admin Route
 app.get("/admin-panel", (req, res) => {
   if (req.session && req.session.user && req.session.user.role === "admin") {
-    res.render("admin-panel");
+    res.render("admin-panel", { isDemo: Boolean(req.session.user.demo) });
   } else {
     res.status(403).send("Access Denied");
   }
@@ -187,7 +208,7 @@ app.get("/admin-panel", (req, res) => {
 // STS-Manager Route
 app.get("/sts-manager-panel", (req, res) => {
   if (req.session && req.session.user && req.session.user.role === "stsManager") {
-    res.render("sts-manager-panel");
+    res.render("sts-manager-panel", { isDemo: Boolean(req.session.user.demo) });
   } else {
     res.redirect("/login");
   }
@@ -200,7 +221,7 @@ app.get("/landfill-manager-panel", (req, res) => {
     req.session.user &&
     (req.session.user.role === "landfillManager" || req.session.user.role === "admin")
   ) {
-    res.render("landfill-manager-panel");
+    res.render("landfill-manager-panel", { isDemo: Boolean(req.session.user.demo) });
   } else {
     res.redirect("/login");
   }
@@ -210,11 +231,11 @@ app.get("/landfill-manager-panel", (req, res) => {
 app.get("/auth/logout", (req, res) => {
   if (req.session && typeof req.session.destroy === "function") {
     req.session.destroy(() => {
-      res.redirect("/login");
+      res.redirect("/");
     });
   } else {
     req.session = null;
-    res.redirect("/login");
+    res.redirect("/");
   }
 });
 
@@ -238,6 +259,22 @@ app.get("/sts-manager/data-entry", (req, res) => {
 
 // Profile View
 app.get("/profile", async (req, res) => {
+  if (req.session && req.session.user && req.session.user.demo) {
+    const demoUser = {
+      email: `${req.session.user.username}@ecosync.demo`,
+      gender: "Other",
+      name: req.session.user.name,
+      role: req.session.user.role,
+      username: req.session.user.username,
+    };
+
+    return res.render("profile-view", {
+      isDemo: true,
+      role: demoUser.role,
+      user: demoUser,
+    });
+  }
+
   if (req.session && req.session.user && req.session.user.id) {
     try {
       const user = await User.findById(req.session.user.id);
@@ -246,6 +283,7 @@ app.get("/profile", async (req, res) => {
       }
 
       res.render("profile-view", {
+        isDemo: false,
         user: user.toObject(),
         role: user.role,
       });
@@ -264,6 +302,10 @@ app.post("/profile", async (req, res) => {
 
   if (!req.session || !req.session.user) {
     return res.status(403).send("Not logged in");
+  }
+
+  if (req.session.user.demo) {
+    return res.redirect("/profile");
   }
 
   try {
@@ -289,7 +331,7 @@ app.get("/landfill-data-entry", (req, res) => {
     req.session.user &&
     (req.session.user.role === "landfillManager" || req.session.user.role === "admin")
   ) {
-    res.render("landfill-data-entry");
+    res.render("landfill-data-entry", { isDemo: Boolean(req.session.user.demo) });
   } else {
     res.redirect("/");
   }
@@ -297,6 +339,10 @@ app.get("/landfill-data-entry", (req, res) => {
 
 // STS Data Creation
 app.post("/sts-data/create", async (req, res) => {
+  if (!req.session || !req.session.user || req.session.user.role !== "stsManager") {
+    return res.status(403).send("STS Manager access is required.");
+  }
+
   const { stsNumber, wasteWeight, startTime, landfillSelection, distanceKm } =
     req.body;
 
@@ -304,6 +350,22 @@ app.post("/sts-data/create", async (req, res) => {
   if (startTime) {
     let [hours, minutes] = startTime.split(":").map(Number);
     startDateTime.setHours(hours, minutes, 0, 0);
+  }
+
+  if (req.session && req.session.user && req.session.user.demo) {
+    return res.status(200).send(`
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta http-equiv="refresh" content="2;url=/sts-manager-panel" />
+        <title>Entry previewed | EcoSync</title>
+        <link rel="stylesheet" href="/styles.css" />
+      </head>
+      <body><main class="status-page"><section class="status-card"><span class="badge">Demo preview</span><h1>Entry captured</h1><p>The complete submission flow works. No live data was changed during this preview.</p><a class="btn btn--primary" href="/sts-manager-panel">Return to workspace</a></section></main></body>
+      </html>
+    `);
   }
 
   try {
@@ -338,10 +400,28 @@ app.post("/sts-data/create", async (req, res) => {
 
 // Print Report (PDF Generation)
 app.post("/print-report", async (req, res) => {
+  const permittedRoles = ["admin", "landfillManager"];
+  if (
+    !req.session ||
+    !req.session.user ||
+    !permittedRoles.includes(req.session.user.role)
+  ) {
+    return res.status(403).send("Landfill Manager access is required.");
+  }
+
   const stsNumber = req.body.stsNumber;
 
   try {
-    const record = await STSData.findOne({ stsNumber: stsNumber });
+    const isDemo = Boolean(req.session && req.session.user && req.session.user.demo);
+    const record = isDemo
+      ? {
+          distanceKm: 18,
+          landfillSelection: "Matuail",
+          startTime: new Date("2026-08-23T08:30:00Z"),
+          stsNumber: 101,
+          wasteWeight: 58,
+        }
+      : await STSData.findOne({ stsNumber: stsNumber });
 
     if (!record) {
       return res.status(404).send("STS Data not found");
@@ -352,82 +432,29 @@ app.post("/print-report", async (req, res) => {
     const { rounds, cost, trucks } = calculateTruckRounds(record.wasteWeight);
     const distanceCost = cost * distanceKm;
 
-    const doc = new PDFDocument();
-    let buffers = [];
-    doc.on("data", buffers.push.bind(buffers));
-    doc.on("end", () => {
-      let pdfData = Buffer.concat(buffers);
-      res
-        .writeHead(200, {
-          "Content-Length": Buffer.byteLength(pdfData),
-          "Content-Type": "application/pdf",
-          "Content-Disposition":
-            'attachment;filename="truck_rounds_report.pdf"',
-        })
-        .end(pdfData);
+    const reportDate = new Date().toISOString().slice(0, 10);
+    const pdfData = buildTransportReportPdf({
+      costPerKm: cost,
+      destination: landfillSelection,
+      distanceKm,
+      reportDate,
+      rounds,
+      stsNumber,
+      totalCost: distanceCost,
+      trucks,
+      wasteWeight: record.wasteWeight,
     });
 
-    doc
-      .rect(50, 50, doc.page.width - 100, doc.page.height - 100)
-      .stroke("#434343")
-      .fillColor("#434343")
-      .fontSize(24)
-      .text(`Truck Rounds Report - STS ${stsNumber}`, { align: "center" })
-      .moveDown()
-      .fillColor("black");
-
-    doc
-      .fontSize(14)
-      .text(`Landfill Selection: ${landfillSelection}`, { indent: 30 })
-      .moveDown()
-      .text(`Distance to Landfill: ${distanceKm} km`, { indent: 30 })
-      .moveDown()
-      .text(`Total Waste Weight: ${record.wasteWeight} tons`, { indent: 30 })
-      .moveDown()
-      .text(`Minimum Rounds Needed: ${rounds}`, { indent: 30 })
-      .moveDown()
-      .text(`Total Cost per KM: $${cost}`, { indent: 30 })
-      .moveDown()
-      .text(`Cost for ${distanceKm} km Distance: $${distanceCost.toFixed(2)}`, {
-        indent: 30,
+    return res
+      .status(200)
+      .set({
+        "Cache-Control": "private, no-store",
+        "Content-Disposition": `attachment; filename="ecosync-sts-${stsNumber}-report.pdf"`,
+        "Content-Length": Buffer.byteLength(pdfData),
+        "Content-Type": "application/pdf",
+        "X-Content-Type-Options": "nosniff",
       })
-      .moveDown();
-
-    doc
-      .fontSize(12)
-      .text(
-        "We've fixed that every STS has 4 different Trucks. In a trip if there is enough wastage all trucks will go. In the last trip if there is enough wastages and if waste is less than 3 tons open truck will go only if it is less than 5 tons dump truck will go if less that 15 tons container career will go otherwise Campactor truck will go. That's how we optimized the fleet. And then calculate oil for the total distance(km).",
-        { indent: 30, align: "justify" }
-      )
-      .moveDown();
-
-    const tableTop = doc.y + 20;
-    doc.lineWidth(1).strokeColor("#434343");
-    doc.rect(50, tableTop, doc.page.width - 100, 40).stroke();
-    doc
-      .fillColor("#434343")
-      .fontSize(12)
-      .text("Truck Type", 60, tableTop + 10)
-      .text("Number of Trips", doc.page.width / 2, tableTop + 10);
-
-    let tableBottom = tableTop + 40;
-    trucks.forEach((truck) => {
-      if (truck.trips > 0) {
-        doc
-          .fillColor("black")
-          .text(truck.type, 60, tableBottom + 10)
-          .text(truck.trips.toString(), doc.page.width / 2, tableBottom + 10);
-        tableBottom += 30;
-      }
-    });
-
-    doc.end();
-
-    STSData.deleteOne({ stsNumber: stsNumber })
-      .then(() =>
-        console.log(`Record with STS number ${stsNumber} deleted successfully.`)
-      )
-      .catch((error) => console.error("Error deleting record:", error));
+      .send(pdfData);
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send("An error occurred");

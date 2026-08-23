@@ -36,12 +36,12 @@
         <div class="surface__body">
           <div class="field">
             <label for="stsNumber">STS number</label>
-            <input class="input" type="text" id="stsNumber" name="stsNumber" inputmode="numeric" required autofocus />
-            <p class="field__hint">A PDF transport report will be generated from the matching record.</p>
+            <input class="input" type="text" id="stsNumber" name="stsNumber" inputmode="numeric" value="<%= isDemo ? '101' : '' %>" required autofocus />
+            <p class="field__hint"><%= isDemo ? 'Use sample STS 101 to download a demonstration report.' : 'A PDF transport report will be generated from the matching record.' %></p>
           </div>
         </div>
         <div class="surface__footer actions">
-          <button class="btn btn--primary" type="submit">Generate report</button>
+          <button class="btn btn--primary" type="submit">Download PDF report</button>
           <a class="btn btn--secondary" href="/landfill-manager-panel">Cancel</a>
         </div>
       </form>

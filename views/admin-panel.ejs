@@ -18,7 +18,7 @@
           <span class="brand__descriptor">Administration</span>
         </span>
       </a>
-      <a class="btn btn--quiet" href="/auth/logout">Sign out</a>
+      <a class="btn btn--quiet" href="/auth/logout"><%= isDemo ? 'Exit demo' : 'Sign out' %></a>
     </div>
   </header>
 
@@ -35,6 +35,10 @@
         <a class="btn btn--secondary" href="/profile">My profile</a>
       </div>
     </div>
+
+    <% if (isDemo) { %>
+      <div class="demo-notice" role="status"><strong>Client preview</strong><span>Explore the complete workflow. Changes are demonstrated without touching live data.</span><a href="/#workspaces">Switch role</a></div>
+    <% } %>
 
     <section class="surface" aria-labelledby="create-user-title">
       <div class="surface__header">
@@ -73,7 +77,6 @@
               <select class="select" id="role" name="role" required>
                 <option value="stsManager">STS Manager</option>
                 <option value="landfillManager">Landfill Manager</option>
-                <option value="unassigned">Unassigned</option>
                 <option value="admin">Admin</option>
               </select>
             </div>

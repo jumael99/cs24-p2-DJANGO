@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     gender: { type: String, required: true, enum: ['Male', 'Female', 'Other'] }, // Added gender field
-    role: { type: String, required: true, enum: ['admin', 'stsManager', 'landfillManager', 'unassigned'] },
+    role: { type: String, required: true, enum: ['admin', 'stsManager', 'landfillManager'] },
 });
 
 const User = mongoose.model('User', userSchema);

@@ -71,7 +71,8 @@ npm run deploy
 After deployment, verify:
 
 - `/styles.css` loads successfully.
-- The sign-in page renders at the Worker URL.
+- The role-selection landing page renders at the Worker URL.
+- All three client preview workspaces open without database writes.
 - Admin, STS Manager, and Landfill Manager sessions redirect correctly.
 - STS data can be written to MongoDB Atlas.
-- Landfill report PDF generation and record deletion complete successfully.
+- Landfill reports download as a readable, one-page A4 PDF on mobile and desktop.

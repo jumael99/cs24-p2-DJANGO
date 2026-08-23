@@ -1,8 +1,16 @@
-# Ecosync
+# EcoSync
 
-## Team Name: DJANGO
+EcoSync is a role-based waste management and logistics platform for municipal operations. It connects administration, Solid Waste Transfer Station (STS) data entry, and landfill reporting in a single responsive application.
 
-Ecosync is a web application designed to optimize waste management and logistics. Our innovative approach simplifies the calculation of logistics and cost management by utilizing a fleet of four different types of trucks, tailored to the needs of Solid Waste Transfer Stations (STS).
+## Client preview
+
+The landing page provides safe, one-click previews for the platform's three roles:
+
+- **Admin** — account creation, user directory, and role management.
+- **STS Manager** — waste load, departure, destination, and route data entry.
+- **Landfill Manager** — STS lookup and downloadable A4 transport reports.
+
+Preview sessions use sample information and never read or change live account data. Real team members can use **Team sign in** to access their assigned workspace.
 
 ### Calculation Simplification
 
@@ -30,18 +38,16 @@ const trucks = [
 ];
 ```
 
-### Credentials
+## Development
 
-`admin`  
-Username: admin  
-Password: admin  
+Create a local `.env` from `.env.example`, then run:
 
-`STS maanger`  
-Username: sultan99@gmail.com  
-Password: 11111  
+```bash
+npm install
+npm run build
+npm start
+```
 
-`Landfill manaager`  
-Username: ib@gmail.com    
-Password: 11111  
+Run `npm test` to verify the precompiled views, secret configuration, and A4 PDF generator. See [DEPLOYMENT.md](./DEPLOYMENT.md) for Cloudflare Workers setup.
 
 

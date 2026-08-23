@@ -1,0 +1,154 @@
+const PAGE_HEIGHT = 842;
+const PAGE_WIDTH = 595;
+
+const COLORS = {
+  green: [0.137, 0.42, 0.282],
+  ink: [0.09, 0.125, 0.106],
+  line: [0.847, 0.871, 0.851],
+  muted: [0.365, 0.408, 0.38],
+  soft: [0.933, 0.945, 0.929],
+  white: [1, 1, 1],
+};
+
+function safeText(value) {
+  return String(value)
+    .replace(/\\/g, "\\\\")
+    .replace(/\(/g, "\\(")
+    .replace(/\)/g, "\\)")
+    .replace(/[^\x20-\x7E]/g, "-");
+}
+
+function color(values, stroke = false) {
+  return `${values.join(" ")} ${stroke ? "RG" : "rg"}`;
+}
+
+function text(x, top, value, size, font = "F1", fill = COLORS.ink) {
+  return [
+    "BT",
+    `/${font} ${size} Tf`,
+    color(fill),
+    `1 0 0 1 ${x} ${PAGE_HEIGHT - top} Tm`,
+    `(${safeText(value)}) Tj`,
+    "ET",
+  ].join("\n");
+}
+
+function rightText(right, top, value, size, font = "F1", fill = COLORS.ink) {
+  // Standard Helvetica digits and Latin labels are close to 0.52em on average.
+  const width = safeText(value).length * size * 0.52;
+  return text(Math.max(42, right - width), top, value, size, font, fill);
+}
+
+function rect(x, top, width, height, fill) {
+  return `${color(fill)}\n${x} ${PAGE_HEIGHT - top - height} ${width} ${height} re f`;
+}
+
+function line(x1, top1, x2, top2, stroke = COLORS.line) {
+  return `${color(stroke, true)}\n1 w\n${x1} ${PAGE_HEIGHT - top1} m ${x2} ${PAGE_HEIGHT - top2} l S`;
+}
+
+function createPdf(objects) {
+  const header = "%PDF-1.4\n";
+  let body = "";
+  const offsets = [0];
+
+  objects.forEach((object, index) => {
+    offsets[index + 1] = Buffer.byteLength(header + body, "binary");
+    body += `${index + 1} 0 obj\n${object}\nendobj\n`;
+  });
+
+  const xrefOffset = Buffer.byteLength(header + body, "binary");
+  const xref = [
+    `xref\n0 ${objects.length + 1}`,
+    "0000000000 65535 f ",
+    ...offsets.slice(1).map((offset) => `${String(offset).padStart(10, "0")} 00000 n `),
+  ].join("\n");
+  const trailer = `\ntrailer\n<< /Size ${objects.length + 1} /Root 1 0 R /Info 7 0 R >>\nstartxref\n${xrefOffset}\n%%EOF\n`;
+
+  return Buffer.from(header + body + xref + trailer, "binary");
+}
+
+function buildTransportReportPdf({
+  costPerKm,
+  destination,
+  distanceKm,
+  reportDate,
+  rounds,
+  stsNumber,
+  totalCost,
+  trucks,
+  wasteWeight,
+}) {
+  const commands = [];
+  const contentWidth = PAGE_WIDTH - 84;
+
+  commands.push(rect(0, 0, PAGE_WIDTH, 10, COLORS.green));
+  commands.push(text(42, 48, "ECOSYNC", 12, "F2", COLORS.green));
+  commands.push(text(42, 64, "WASTE MANAGEMENT & LOGISTICS", 8, "F1", COLORS.muted));
+  commands.push(rightText(553, 48, "TRANSPORT REPORT", 9, "F2", COLORS.muted));
+  commands.push(line(42, 78, 553, 78));
+
+  commands.push(text(42, 120, `STS ${stsNumber}`, 27, "F2"));
+  commands.push(text(42, 147, "Movement and fleet allocation summary", 11, "F1", COLORS.muted));
+  commands.push(rightText(553, 119, destination || "Not assigned", 11, "F2"));
+  commands.push(rightText(553, 139, "DESTINATION LANDFILL", 8, "F2", COLORS.muted));
+
+  const metricTop = 178;
+  const metricGap = 8;
+  const metricWidth = (contentWidth - metricGap * 2) / 3;
+  const metrics = [
+    ["WASTE LOAD", `${wasteWeight} tons`],
+    ["ROUTE DISTANCE", `${distanceKm} km`],
+    ["MINIMUM ROUNDS", String(rounds)],
+  ];
+
+  metrics.forEach(([label, value], index) => {
+    const x = 42 + index * (metricWidth + metricGap);
+    commands.push(rect(x, metricTop, metricWidth, 72, COLORS.soft));
+    commands.push(text(x + 12, metricTop + 25, label, 7, "F2", COLORS.muted));
+    commands.push(text(x + 12, metricTop + 50, value, 15, "F2"));
+  });
+
+  commands.push(text(42, 294, "Fleet allocation", 13, "F2"));
+  commands.push(text(42, 314, "Optimized truck movements required for this load.", 9, "F1", COLORS.muted));
+
+  const tableTop = 334;
+  commands.push(rect(42, tableTop, contentWidth, 30, COLORS.ink));
+  commands.push(text(54, tableTop + 20, "TRUCK TYPE", 8, "F2", COLORS.white));
+  commands.push(rightText(540, tableTop + 20, "TRIPS", 8, "F2", COLORS.white));
+
+  let tableBottom = tableTop + 30;
+  trucks.filter((truck) => truck.trips > 0).forEach((truck) => {
+    commands.push(rect(42, tableBottom, contentWidth, 34, COLORS.white));
+    commands.push(text(54, tableBottom + 22, truck.type, 10));
+    commands.push(rightText(540, tableBottom + 22, String(truck.trips), 10, "F2"));
+    commands.push(line(42, tableBottom + 34, 553, tableBottom + 34));
+    tableBottom += 34;
+  });
+
+  const costTop = Math.max(tableBottom + 46, 510);
+  commands.push(text(42, costTop, "Estimated transport cost", 13, "F2"));
+  commands.push(text(42, costTop + 22, "Calculated from fleet allocation and route distance.", 9, "F1", COLORS.muted));
+  commands.push(rightText(553, costTop, `$${Number(totalCost).toFixed(2)}`, 24, "F2", COLORS.green));
+  commands.push(rightText(553, costTop + 27, `BASE COST  $${costPerKm} / KM`, 8, "F2", COLORS.muted));
+
+  commands.push(line(42, 744, 553, 744));
+  commands.push(text(42, 762, "Generated by EcoSync", 8, "F1", COLORS.muted));
+  commands.push(rightText(553, 762, `Report date  ${reportDate}`, 8, "F1", COLORS.muted));
+  commands.push(rightText(553, 792, "Page 1 of 1", 7, "F1", COLORS.muted));
+
+  const stream = commands.join("\n");
+  const objects = [
+    "<< /Type /Catalog /Pages 2 0 R >>",
+    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+    `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PAGE_WIDTH} ${PAGE_HEIGHT}] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>`,
+    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>",
+    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>",
+    `<< /Length ${Buffer.byteLength(stream, "binary")} >>\nstream\n${stream}\nendstream`,
+    `<< /Title (EcoSync STS ${safeText(stsNumber)} Report) /Author (EcoSync) /Subject (Transport report) /CreationDate (D:${String(reportDate).replace(/-/g, "")}) >>`,
+  ];
+
+  return createPdf(objects);
+}
+
+module.exports = { buildTransportReportPdf };

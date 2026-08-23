@@ -20,7 +20,7 @@ const templates = Object.fromEntries(
         _with: false,
         client: true,
         compileDebug: false,
-        destructuredLocals: ["role", "roles", "user", "users"],
+        destructuredLocals: ["isDemo", "role", "roles", "user", "users"],
         filename: filePath,
         strict: true,
       });

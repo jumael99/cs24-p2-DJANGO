@@ -18,7 +18,7 @@
           <span class="brand__descriptor">STS workspace</span>
         </span>
       </a>
-      <a class="btn btn--quiet" href="/auth/logout">Sign out</a>
+      <a class="btn btn--quiet" href="/auth/logout"><%= isDemo ? 'Exit demo' : 'Sign out' %></a>
     </div>
   </header>
 
@@ -28,6 +28,10 @@
       <h1>STS Manager workspace</h1>
       <p class="lede">Record station activity and keep your account details up to date.</p>
     </div>
+
+    <% if (isDemo) { %>
+      <div class="demo-notice" role="status"><strong>Client preview</strong><span>Try the data-entry workflow. Demo submissions do not change live records.</span><a href="/#workspaces">Switch role</a></div>
+    <% } %>
 
     <div class="dashboard-grid">
       <section class="task-card">
