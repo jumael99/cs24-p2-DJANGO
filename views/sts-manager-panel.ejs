@@ -1,65 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>STS Manager Panel</title>
-    <!-- Include Bootstrap CSS from a CDN -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
-    <style>
-      /* Additional custom styles can go here */
-      .username {
-        font-size: 3rem;
-        /* Big font size for the username */
-        font-weight: bold;
-        /* Make it bold */
-        margin-bottom: 1rem;
-        /* Add some spacing below the username */
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f3f5f2" />
+  <title>STS Workspace | EcoSync</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="/sts-manager-panel" aria-label="EcoSync STS workspace">
+        <span class="brand__mark" aria-hidden="true">E</span>
+        <span class="brand__text">
+          <span class="brand__name">EcoSync</span>
+          <span class="brand__descriptor">STS workspace</span>
+        </span>
+      </a>
+      <a class="btn btn--quiet" href="/auth/logout">Sign out</a>
+    </div>
+  </header>
 
-      .all-width-same > * {
-        padding-top: 1rem;
-      }
-    </style>
-  </head>
-
-  <body class="bg-light">
-    <div class="container py-5 shadow w-50 my-5 p-4 rounded rounded-5">
-      <!-- Centered container for your content -->
-
-      <!-- Display username in a big and stylish font -->
-      <h1 class="username text-center border-bottom pb-2">STS Manager</h1>
-
-      <div class="d-flex justify-content-between all-width-same">
-        <!-- Use Bootstrap classes for styling and spacing -->
-        <div>
-          <form action="/profile" method="get">
-            <button type="submit" class="btn btn-primary btn-lg">
-              Profile view
-            </button>
-          </form>
-        </div>
-
-        <div>
-          <form action="/sts-manager/data-entry" method="get">
-            <button type="submit" class="btn btn-secondary btn-lg">
-              Data Entries
-            </button>
-          </form>
-        </div>
-
-        <div>
-          <a href="/auth/logout" class="btn btn-warning btn-lg">Logout</a>
-        </div>
-      </div>
+  <main class="page" id="main-content">
+    <div class="page-heading">
+      <p class="eyebrow">Transfer station</p>
+      <h1>STS Manager workspace</h1>
+      <p class="lede">Record station activity and keep your account details up to date.</p>
     </div>
 
-    <!-- Include Bootstrap JS and its dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.5/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
+    <div class="dashboard-grid">
+      <section class="task-card">
+        <div>
+          <span class="task-card__index">Operations</span>
+          <h2>New data entry</h2>
+          <p>Log waste volume, timing, destination, and route distance for an STS movement.</p>
+        </div>
+        <a class="btn btn--primary" href="/sts-manager/data-entry">Create entry</a>
+      </section>
+
+      <section class="task-card">
+        <div>
+          <span class="task-card__index">Account</span>
+          <h2>Profile details</h2>
+          <p>Review and update your name, email, username, gender, or password.</p>
+        </div>
+        <a class="btn btn--secondary" href="/profile">View profile</a>
+      </section>
+    </div>
+  </main>
+</body>
 </html>

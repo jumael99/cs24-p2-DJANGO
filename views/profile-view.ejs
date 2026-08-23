@@ -1,86 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>User Profile</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .username-display {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #007bff;
-            margin-bottom: 1rem;
-        }
-        .mycarddetails {
-            width: 50%;
-            margin: auto; /* Centering the card */
-        }
-        .box-childs > * {
-            width: 48%; /* Adjusted for proper alignment */
-            margin-bottom: 1rem; /* Add space between inputs */
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile | EcoSync</title>
+  <link rel="stylesheet" href="/styles.css" />
 </head>
-<body class="bg-light">
-<div class="container py-5">
-    <div class="mycarddetails my-5 shadow">
-        <div class="text-center mb-4">
-            <div class="username-display">User Profile</div>
-            <p>Current User: <%= user.name %></p>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="<%= role === 'admin' ? '/admin-panel' : role === 'stsManager' ? '/sts-manager-panel' : '/landfill-manager-panel' %>" aria-label="EcoSync workspace">
+        <span class="brand__mark" aria-hidden="true">E</span>
+        <span class="brand__text">
+          <span class="brand__name">EcoSync</span>
+          <span class="brand__descriptor">My account</span>
+        </span>
+      </a>
+      <a class="btn btn--quiet" href="<%= role === 'admin' ? '/admin-panel' : role === 'stsManager' ? '/sts-manager-panel' : '/landfill-manager-panel' %>">Back to workspace</a>
+    </div>
+  </header>
+
+  <main class="page page--narrow" id="main-content">
+    <div class="page-heading">
+      <p class="eyebrow">My account</p>
+      <h1>Profile settings</h1>
+      <p class="lede">Keep your personal and sign-in information current.</p>
+    </div>
+
+    <div class="section-stack">
+      <section class="profile-summary" aria-label="Current account summary">
+        <div>
+          <p class="profile-summary__name"><%= user.name %></p>
+          <p class="muted">@<%= user.username %></p>
+        </div>
+        <span class="badge">
+          <% if (user.role === 'stsManager') { %>
+            STS Manager
+          <% } else if (user.role === 'admin') { %>
+            Admin
+          <% } else if (user.role === 'landfillManager') { %>
+            Landfill Manager
+          <% } else { %>
+            <%= user.role %>
+          <% } %>
+        </span>
+      </section>
+
+      <section class="surface" aria-labelledby="profile-form-title">
+        <div class="surface__header">
+          <h2 id="profile-form-title">Account details</h2>
         </div>
         <form action="/profile" method="post">
-            <h3 class="text-center border-bottom py-2">User: <%= user.name %></h3>
-            <div class="form-row justify-content-center p-4">
-                <div class="form-group col-md-6">
-                    User Name: <%= user.username %><br>
-                    Role:
-                    <% if (user.role === 'stsManager') { %>
-                        STS Manager
-                    <% } else if (user.role === 'admin') { %>
-                        Admin
-                    <% } else if (user.role === 'landfillManager') { %>
-                        Landfill Manager
-                    <% } else { %>
-                        <%= user.role %> <!-- Fallback to displaying the raw role value -->
-                    <% } %>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="name">Name:</label>
-                    <input type="text" class="form-control" id="name" name="name" value="<%= user.name %>" required/>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="email">Email:</label>
-                    <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" required/>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="username">Username:</label>
-                    <input type="text" class="form-control" id="username" name="username" value="<%= user.username %>" required/>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="gender">Gender:</label>
-                    <select class="form-control" id="gender" name="gender" required>
-                        <option value="Male" <%= user.gender === 'Male' ? 'selected' : '' %>>Male</option>
-                        <option value="Female" <%= user.gender === 'Female' ? 'selected' : '' %>>Female</option>
-                        <option value="Other" <%= user.gender === 'Other' ? 'selected' : '' %>>Other</option>
-                    </select>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="password">Password:</label>
-                    <input type="text" class="form-control" id="password" name="password" />
-                </div>
-                <!-- The role display as button is a bit unconventional since it's not actionable. -->
-                <!-- Consider changing it to a non-interactive element for clarity, unless this serves a specific purpose. -->
+          <div class="surface__body">
+            <div class="form-grid form-grid--two">
+              <div class="field">
+                <label for="name">Full name</label>
+                <input class="input" type="text" id="name" name="name" autocomplete="name" value="<%= user.name %>" required />
+              </div>
+              <div class="field">
+                <label for="email">Email</label>
+                <input class="input" type="email" id="email" name="email" autocomplete="email" value="<%= user.email %>" required />
+              </div>
+              <div class="field">
+                <label for="username">Username</label>
+                <input class="input" type="text" id="username" name="username" autocomplete="username" value="<%= user.username %>" required />
+              </div>
+              <div class="field">
+                <label for="gender">Gender</label>
+                <select class="select" id="gender" name="gender" required>
+                  <option value="Male" <%= user.gender === 'Male' ? 'selected' : '' %>>Male</option>
+                  <option value="Female" <%= user.gender === 'Female' ? 'selected' : '' %>>Female</option>
+                  <option value="Other" <%= user.gender === 'Other' ? 'selected' : '' %>>Other</option>
+                </select>
+              </div>
+              <div class="field field--wide">
+                <label for="password">New password</label>
+                <input class="input" type="password" id="password" name="password" autocomplete="new-password" placeholder="Leave blank to keep current password" />
+              </div>
             </div>
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary">Update Profile</button>
-                <a href="<%= role === 'admin' ? '/admin-panel' : role === 'stsManager' ? '/sts-manager-panel' : '/landfill-manager-panel' %>" class="btn btn-secondary">Go back</a>
-            </div>
+          </div>
+          <div class="surface__footer actions">
+            <button class="btn btn--primary" type="submit">Save changes</button>
+            <a class="btn btn--secondary" href="<%= role === 'admin' ? '/admin-panel' : role === 'stsManager' ? '/sts-manager-panel' : '/landfill-manager-panel' %>">Cancel</a>
+          </div>
         </form>
+      </section>
     </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.9.5/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </main>
 </body>
 </html>

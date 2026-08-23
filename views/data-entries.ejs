@@ -3,85 +3,102 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Entries</title>
-  <!-- Bootstrap CSS for styling -->
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
-  <style>
-    /* Additional styles */
-    .distance-display {
-      margin-top: 10px;
-    }
-  </style>
+  <title>New STS Entry | EcoSync</title>
+  <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-<div class="w-50 mx-auto shadow p-5 my-5">
-  <h2>Data Entries</h2>
-  <form action="/sts-data/create" method="post">
-    <div class="form-group">
-      <label for="stsNumber">STS Number:</label>
-      <input type="number" class="form-control" id="stsNumber" name="stsNumber" required />
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="/sts-manager-panel" aria-label="EcoSync STS workspace">
+        <span class="brand__mark" aria-hidden="true">E</span>
+        <span class="brand__text">
+          <span class="brand__name">EcoSync</span>
+          <span class="brand__descriptor">STS workspace</span>
+        </span>
+      </a>
+      <a class="btn btn--quiet" href="/sts-manager-panel">Back to workspace</a>
     </div>
-    <div class="form-group">
-      <label for="wasteWeight">Wastage Amount (tons):</label>
-      <input type="number" class="form-control" id="wasteWeight" name="wasteWeight" required />
-    </div>
-    <div class="form-group">
-      <label for="startTime">Starting Time:</label>
-      <input type="time" class="form-control" id="startTime" name="startTime" required />
-    </div>
-    <!-- Dropdown for landfill selection -->
-    <div class="form-group">
-      <label for="landfillSelection">Select Landfill (Select Distance for STS Efficiency):</label>
-      <select class="form-control" id="landfillSelection" name="landfillSelection" onchange="showDistance()">
-        <option value="">Select Landfill</option>
-        <option value="Amibazar">Amibazar Landfill</option>
-        <option value="Matuail">Matuail Landfill</option>
-      </select>
-    </div>
-    <!-- Display for distance -->
-    <div class="form-group distance-display" id="distanceDisplay" style="display: none;">
-      <label for="distanceKm">Distance (Km):</label>
-      <input type="text" class="form-control" id="distanceKm" name="distanceKm" readonly />
-    </div>
-    <button type="submit" class="btn btn-primary mt-2">Submit</button>
-  </form>
-  <!-- Updated Go back link to match the size of the submit button -->
-  <a href="/sts-manager-panel" class="btn btn-primary back-button mt-3">Go back</a>
-</div>
+  </header>
 
-<script>
-  // Generate initial random distances for both landfills when the page loads
-  let amibazarDistance = getRandomDistance(15, 23);
-  let matuailDistance = getRandomDistance(15, 23);
+  <main class="page page--narrow" id="main-content">
+    <div class="page-heading">
+      <p class="eyebrow">Operations log</p>
+      <h1>New STS entry</h1>
+      <p class="lede">Record the load details and intended landfill for this movement.</p>
+    </div>
 
-  function showDistance() {
-    const selection = document.getElementById('landfillSelection').value;
-    const distanceDisplay = document.getElementById('distanceDisplay');
-    const distanceKm = document.getElementById('distanceKm');
+    <section class="surface" aria-labelledby="entry-form-title">
+      <div class="surface__header">
+        <h2 id="entry-form-title">Movement details</h2>
+      </div>
+      <form id="sts-entry-form" action="/sts-data/create" method="post">
+        <div class="surface__body">
+          <div class="form-grid">
+            <div class="field">
+              <label for="stsNumber">STS number</label>
+              <input class="input" type="number" id="stsNumber" name="stsNumber" min="1" inputmode="numeric" required />
+            </div>
+            <div class="field">
+              <label for="wasteWeight">Waste amount (tons)</label>
+              <input class="input" type="number" id="wasteWeight" name="wasteWeight" min="0" step="any" inputmode="decimal" required />
+            </div>
+            <div class="field">
+              <label for="startTime">Starting time</label>
+              <input class="input" type="time" id="startTime" name="startTime" required />
+            </div>
+            <div class="field">
+              <label for="landfillSelection">Destination landfill</label>
+              <select class="select" id="landfillSelection" name="landfillSelection">
+                <option value="">Select a landfill</option>
+                <option value="Amibazar">Amibazar Landfill</option>
+                <option value="Matuail">Matuail Landfill</option>
+              </select>
+              <p class="field__hint">The route distance is estimated when a landfill is selected.</p>
+            </div>
+            <div class="field" id="distanceDisplay" hidden>
+              <label for="distanceKm">Estimated distance (km)</label>
+              <input class="input" type="text" id="distanceKm" name="distanceKm" readonly />
+            </div>
+          </div>
+        </div>
+        <div class="surface__footer actions">
+          <button class="btn btn--primary" type="submit">Submit entry</button>
+          <a class="btn btn--secondary" href="/sts-manager-panel">Cancel</a>
+        </div>
+      </form>
+    </section>
+  </main>
 
-    if (selection === 'Amibazar') {
-      distanceDisplay.style.display = 'block';
-      distanceKm.value = amibazarDistance; // Use the pre-generated distance for Amibazar
-    } else if (selection === 'Matuail') {
-      distanceDisplay.style.display = 'block';
-      distanceKm.value = matuailDistance; // Use the pre-generated distance for Matuail
-    } else {
-      distanceDisplay.style.display = 'none';
-      distanceKm.value = ''; // Clear the value if no landfill is selected
+  <script>
+    const landfillSelection = document.getElementById("landfillSelection");
+    const distanceDisplay = document.getElementById("distanceDisplay");
+    const distanceKm = document.getElementById("distanceKm");
+    const entryForm = document.getElementById("sts-entry-form");
+
+    let amibazarDistance = getRandomDistance(15, 23);
+    let matuailDistance = getRandomDistance(15, 23);
+
+    function getRandomDistance(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-  }
 
-  function getRandomDistance(min, max) {
-    // Generate a random number between min and max, inclusive
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+    function showDistance() {
+      const distances = {
+        Amibazar: amibazarDistance,
+        Matuail: matuailDistance
+      };
+      const selectedDistance = distances[landfillSelection.value];
 
-  // Optional: Reset distances when the form is submitted
-  document.querySelector('form').addEventListener('submit', function() {
-    amibazarDistance = getRandomDistance(15, 23);
-    matuailDistance = getRandomDistance(15, 23);
-  });
-</script>
+      distanceDisplay.hidden = !selectedDistance;
+      distanceKm.value = selectedDistance || "";
+    }
 
+    landfillSelection.addEventListener("change", showDistance);
+    entryForm.addEventListener("submit", function () {
+      amibazarDistance = getRandomDistance(15, 23);
+      matuailDistance = getRandomDistance(15, 23);
+    });
+  </script>
 </body>
 </html>

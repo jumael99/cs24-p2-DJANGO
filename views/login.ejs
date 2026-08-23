@@ -1,47 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
-    <!-- Bootstrap CSS -->
-    <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#17201b" />
+  <title>Sign in | EcoSync</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="login-shell">
+    <section class="login-intro" aria-labelledby="platform-title">
+      <div class="login-intro__inner">
+        <div class="login-intro__rule" aria-hidden="true"></div>
+        <p class="eyebrow">Municipal operations</p>
+        <h1 id="platform-title">Cleaner logistics.<br />Clearer decisions.</h1>
+        <p class="lede">A focused workspace for transfer-station and landfill teams to coordinate daily waste operations.</p>
+      </div>
+    </section>
 
-  <body>
-    <div class="card w-25 mx-auto p-4 my-5 shadow">
-      <h2 class="card-title text-center fw-bolder">Login</h2>
-      <form action="/auth/login" method="POST">
-        <div class="form-group">
-          <label for="login">Username or Email:</label> <!-- Correct the label -->
-          <input
-                  type="text"
-                  class="form-control"
-                  id="login"
-                  name="login"
-          required
-          />
-        </div>
-        <div class="form-group">
-          <label for="password">Password:</label>
-          <input
-                  type="password"
-                  class="form-control"
-                  id="password"
-                  name="password"
-                  required
-          />
-        </div>
-        <button type="submit" class="btn btn-primary">Login</button>
-      </form>
-    </div>
+    <section class="login-panel" aria-labelledby="login-title">
+      <div class="login-card">
+        <a class="brand" href="/" aria-label="EcoSync home">
+          <span class="brand__mark" aria-hidden="true">E</span>
+          <span class="brand__text">
+            <span class="brand__name">EcoSync</span>
+            <span class="brand__descriptor">Waste operations</span>
+          </span>
+        </a>
 
-    <!-- Optional JavaScript and Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.5/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
+        <div class="login-card__heading">
+          <p class="eyebrow">Secure access</p>
+          <h2 id="login-title">Sign in to your workspace</h2>
+          <p class="muted">Use your assigned username or work email.</p>
+        </div>
+
+        <form class="form-grid" action="/auth/login" method="POST">
+          <div class="field">
+            <label for="login">Username or email</label>
+            <input class="input" type="text" id="login" name="login" autocomplete="username" required autofocus />
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input class="input" type="password" id="password" name="password" autocomplete="current-password" required />
+          </div>
+          <button class="btn btn--primary full-width" type="submit">Sign in</button>
+        </form>
+      </div>
+    </section>
+  </main>
+</body>
 </html>

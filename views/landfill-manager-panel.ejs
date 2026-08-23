@@ -1,26 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Landfill Manager Panel</title>
-    <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div class="w-50 shadow-lg text-center py-5 my-5 mx-auto border">
-      <h1>Welcome, Landfill Manager</h1>
-      <p>This is your dashboard.</p>
-      <!-- Logout Button -->
-      <a href="/landfill-data-entry" class="btn btn-primary">Get report for any STS</a>
-      <a href="/auth/logout" class="btn btn-warning">Logout</a>
-      <a href="/profile" class="btn btn-primary"> Profile view</a>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f3f5f2" />
+  <title>Landfill Workspace | EcoSync</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="/landfill-manager-panel" aria-label="EcoSync landfill workspace">
+        <span class="brand__mark" aria-hidden="true">E</span>
+        <span class="brand__text">
+          <span class="brand__name">EcoSync</span>
+          <span class="brand__descriptor">Landfill workspace</span>
+        </span>
+      </a>
+      <a class="btn btn--quiet" href="/auth/logout">Sign out</a>
+    </div>
+  </header>
+
+  <main class="page" id="main-content">
+    <div class="page-heading">
+      <p class="eyebrow">Landfill operations</p>
+      <h1>Landfill Manager workspace</h1>
+      <p class="lede">Retrieve transfer-station reports and manage your account from one place.</p>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.5/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
+    <div class="dashboard-grid">
+      <section class="task-card">
+        <div>
+          <span class="task-card__index">Reporting</span>
+          <h2>STS report</h2>
+          <p>Generate a transport report using the transfer station number.</p>
+        </div>
+        <a class="btn btn--primary" href="/landfill-data-entry">Get report</a>
+      </section>
+
+      <section class="task-card">
+        <div>
+          <span class="task-card__index">Account</span>
+          <h2>Profile details</h2>
+          <p>Review and update your account information and credentials.</p>
+        </div>
+        <a class="btn btn--secondary" href="/profile">View profile</a>
+      </section>
+    </div>
+  </main>
+</body>
 </html>

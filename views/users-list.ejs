@@ -1,60 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Users List</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .container {
-            margin-top: 50px;
-        }
-        .user-row {
-            margin-bottom: 10px;
-        }
-        .user-card {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            padding: 15px;
-            border-radius: 5px;
-        }
-        .user-action button {
-            background-color: #f44336; /* Red */
-            color: white;
-            margin-right: 5px;
-        }
-        .edit-profile {
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Users | EcoSync</title>
+  <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-
-<div class="container">
-    <h2 class="mb-4 text-center">Users List</h2>
-    <% users.forEach(user => { %>
-        <div class="row user-row">
-            <div class="col-md-12">
-                <div class="user-card d-flex justify-content-between align-items-center">
-                    <div>
-                        <strong><%= user.username %></strong> - <span><%= user.role %></span>
-                    </div>
-                    <div class="user-action">
-                        <a href="/users/edit/<%= user._id %>" class="btn btn-primary btn-sm">Edit</a>
-                        <!-- Delete Form -->
-                        <form action="/users/delete/<%= user._id %>" method="POST" style="display: inline;">
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <% }) %>
-    <div class="edit-profile text-center">
-        <a href="/admin-panel" class="btn btn-info">Go to admin panel</a>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="/admin-panel" aria-label="EcoSync administration">
+        <span class="brand__mark" aria-hidden="true">E</span>
+        <span class="brand__text">
+          <span class="brand__name">EcoSync</span>
+          <span class="brand__descriptor">Administration</span>
+        </span>
+      </a>
+      <a class="btn btn--quiet" href="/admin-panel">Back to admin</a>
     </div>
-</div>
+  </header>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <main class="page" id="main-content">
+    <div class="page-heading page-heading--split">
+      <div>
+        <p class="eyebrow">Access control</p>
+        <h1>User directory</h1>
+        <p class="lede">Review assigned roles and maintain user access.</p>
+      </div>
+      <a class="btn btn--secondary" href="/admin-panel">Create a user</a>
+    </div>
+
+    <section class="surface" aria-labelledby="user-list-title">
+      <div class="surface__header">
+        <h2 id="user-list-title">All users</h2>
+      </div>
+      <div class="surface__body">
+        <% if (users.length === 0) { %>
+          <div class="empty-state">No users have been added yet.</div>
+        <% } else { %>
+          <ul class="list">
+            <% users.forEach(user => { %>
+              <li class="list-row">
+                <div>
+                  <div class="list-row__primary"><%= user.username %></div>
+                  <div class="list-row__secondary">Role: <%= user.role %></div>
+                </div>
+                <div class="actions">
+                  <a class="btn btn--secondary" href="/users/edit/<%= user._id %>">Edit</a>
+                  <form class="inline-form" action="/users/delete/<%= user._id %>" method="POST">
+                    <button class="btn btn--danger" type="submit">Delete</button>
+                  </form>
+                </div>
+              </li>
+            <% }) %>
+          </ul>
+        <% } %>
+      </div>
+    </section>
+  </main>
 </body>
 </html>

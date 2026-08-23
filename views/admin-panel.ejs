@@ -3,101 +3,87 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Panel</title>
-  <link
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-          rel="stylesheet"
-  />
+  <meta name="theme-color" content="#f3f5f2" />
+  <title>Administration | EcoSync</title>
+  <link rel="stylesheet" href="/styles.css" />
 </head>
-
-<style>
-  .box-childs > * {
-    width: 45%;
-  }
-</style>
 <body>
-<div class="container card w-50 p-4 my-4">
-  <div class="d-flex justify-content-between align-items-center">
-    <h3>Admin Panel - Create User</h3>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="/admin-panel" aria-label="EcoSync administration">
+        <span class="brand__mark" aria-hidden="true">E</span>
+        <span class="brand__text">
+          <span class="brand__name">EcoSync</span>
+          <span class="brand__descriptor">Administration</span>
+        </span>
+      </a>
+      <a class="btn btn--quiet" href="/auth/logout">Sign out</a>
+    </div>
+  </header>
 
-    <a href="/auth/logout" class="btn btn-warning mx-4">Logout</a>
-  </div>
-  <form action="/users" method="POST">
-    <div class="d-flex justify-content-between box-childs">
-      <div class="form-group">
-        <label for="name">Name:</label>
-        <input
-                type="text"
-                class="form-control"
-                id="name"
-                name="name"
-                required
-        />
+  <main class="page" id="main-content">
+    <div class="page-heading page-heading--split">
+      <div>
+        <p class="eyebrow">Administration</p>
+        <h1>Manage access</h1>
+        <p class="lede">Create user accounts and maintain role-based access to EcoSync workspaces.</p>
       </div>
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input
-                type="email"
-                class="form-control"
-                id="email"
-                name="email"
-                required
-        />
+      <div class="actions" aria-label="Administration shortcuts">
+        <a class="btn btn--secondary" href="/users">User directory</a>
+        <a class="btn btn--secondary" href="/users/roles">System roles</a>
+        <a class="btn btn--secondary" href="/profile">My profile</a>
       </div>
     </div>
-    <div class="d-flex justify-content-between box-childs">
-      <div class="form-group">
-        <label for="username">Username:</label>
-        <input
-                type="text"
-                class="form-control"
-                id="username"
-                name="username"
-                required
-        />
+
+    <section class="surface" aria-labelledby="create-user-title">
+      <div class="surface__header">
+        <p class="eyebrow">New account</p>
+        <h2 id="create-user-title">Create a user</h2>
       </div>
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input
-                type="password"
-                class="form-control"
-                id="password"
-                name="password"
-                required
-        />
-      </div>
-    </div>
-    <div class="d-flex justify-content-between box-childs">
-      <div class="form-group">
-        <label for="gender">Gender:</label>
-        <select class="form-control" id="gender" name="gender" required>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="role">Role:</label>
-        <select class="form-control" id="role" name="role" required>
-          <option value="stsManager">STS Manager</option>
-          <option value="landfillManager">Landfill Manager</option>
-          <option value="unassigned">Unassigned</option>
-          <option value="admin">Admin</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <button type="submit" class="btn btn-primary">Create User</button>
-    </div>
-    <div class="border-top my-3"></div>
-    <h3>Manage Users and Edit Profile</h3>
-    <div class="my-4">
-      <a href="/users" class="btn btn-secondary">Get All Users</a>
-      <a href="/users/roles" class="btn btn-secondary">See all roles</a>
-      <a href="/profile" class="btn btn-info">Edit profile</a>
-    </div>
-    <div class="border-top my-3"></div>
-  </form>
-</div>
+      <form action="/users" method="POST">
+        <div class="surface__body">
+          <div class="form-grid form-grid--two">
+            <div class="field">
+              <label for="name">Full name</label>
+              <input class="input" type="text" id="name" name="name" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input class="input" type="email" id="email" name="email" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="username">Username</label>
+              <input class="input" type="text" id="username" name="username" autocomplete="username" required />
+            </div>
+            <div class="field">
+              <label for="password">Temporary password</label>
+              <input class="input" type="password" id="password" name="password" autocomplete="new-password" required />
+            </div>
+            <div class="field">
+              <label for="gender">Gender</label>
+              <select class="select" id="gender" name="gender" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="role">Role</label>
+              <select class="select" id="role" name="role" required>
+                <option value="stsManager">STS Manager</option>
+                <option value="landfillManager">Landfill Manager</option>
+                <option value="unassigned">Unassigned</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="surface__footer">
+          <button class="btn btn--primary" type="submit">Create user</button>
+        </div>
+      </form>
+    </section>
+  </main>
 </body>
 </html>

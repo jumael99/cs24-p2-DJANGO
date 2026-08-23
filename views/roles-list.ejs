@@ -1,32 +1,48 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Roles List</title>
-    <!-- Bootstrap CSS -->
-    <link
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <style>
-      body {
-        padding: 20px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <h1 class="mt-5 mb-4">Roles</h1>
-          <ul class="list-group mb-4">
-            <% roles.forEach(function(role) { %>
-            <li class="list-group-item"><%= role %></li>
-            <% }); %>
-          </ul>
-          <a href="/admin-panel" class="btn btn-primary">Back to Admin Panel</a>     
-           
-        </div>
-      </div>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roles | EcoSync</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="/admin-panel" aria-label="EcoSync administration">
+        <span class="brand__mark" aria-hidden="true">E</span>
+        <span class="brand__text">
+          <span class="brand__name">EcoSync</span>
+          <span class="brand__descriptor">Administration</span>
+        </span>
+      </a>
+      <a class="btn btn--quiet" href="/admin-panel">Back to admin</a>
     </div>
-  </body>
+  </header>
+
+  <main class="page page--narrow" id="main-content">
+    <div class="page-heading">
+      <p class="eyebrow">Access control</p>
+      <h1>System roles</h1>
+      <p class="lede">Roles determine the workspace and operational tools available to each user.</p>
+    </div>
+
+    <section class="surface" aria-labelledby="role-list-title">
+      <div class="surface__header">
+        <h2 id="role-list-title">Available roles</h2>
+      </div>
+      <div class="surface__body">
+        <ul class="list">
+          <% roles.forEach(function(role) { %>
+            <li class="list-row">
+              <span class="list-row__primary"><%= role %></span>
+              <span class="badge">Active</span>
+            </li>
+          <% }); %>
+        </ul>
+      </div>
+    </section>
+  </main>
+</body>
 </html>
